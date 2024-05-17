@@ -3,16 +3,25 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Login from "./pages/Login";
 import Profile from "./components/temp/Test";
 import Temp from "./Temp";
+import EditorDashboardPage from "./pages/Dashboard/EditorDashboard/EditorDashboardPage";
+import TrackPage from "./pages/Tracks/TrackPage";
+import Sidebar from "./components/Sidebar/Sidebar";
+import "./App.css";
 
 const App = () => {
   return (
-    <div>
+    <div className="app-container">
       <Router>
-        <Routes>
-          <Route path="/" element={<Profile />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/oauth2callback" element={<Temp />} />
-        </Routes>
+        <Sidebar />
+        <div className="main-content">
+          <Routes>
+            <Route path="/" element={<EditorDashboardPage />} />
+            <Route path="/tracks" element={<TrackPage />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/oauth2callback" element={<Temp />} />
+            <Route path="/tracks/:id" element={<Profile />} />
+          </Routes>
+        </div>
       </Router>
     </div>
   );
