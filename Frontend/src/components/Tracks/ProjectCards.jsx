@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 const ProjectCards = () => {
   return (
     <div className="flex flex-wrap gap-5 py-2 mt-2">
-      <Link to="/upload">
+      <Link to="/tracks/bankai">
         <div className="bg-white border rounded-lg p-2 cursor-pointer">
           <div className="w-64 h-36">
             <img src="/Rectangle28.png" className="w-full" />
