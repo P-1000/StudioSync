@@ -20,6 +20,7 @@ const App = () => {
           <Routes>
             <Route path="/" element={<EditorDashboardPage />} />
             <Route path="/tracks" element={<TrackPage />} />
+            <Route path="/tracks/:id" element={<TrackCardPage />} />
             <Route path="/upload" element={<DemoUpload />} />
             <Route path="/login" element={<Login />} />
             <Route path="/oauth2callback" element={<Temp />} />

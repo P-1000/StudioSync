@@ -12,3 +12,7 @@
 .main-content {
   flex-grow: 1;
 }
+
+.bg-image{
+  background-image: url('/Frontend/public/Rectangle28.png');
+}
