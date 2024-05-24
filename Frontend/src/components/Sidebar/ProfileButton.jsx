@@ -4,14 +4,14 @@ import { useAuth0 } from "@auth0/auth0-react";
 
 const ProfileButton = () => {
   const { user, isAuthenticated, isLoading, logout } = useAuth0();
-  useEffect(() => {
-    //todo truncate correctly bro !
-    if (user) {
-      if (user.name.length > 10) {
-        user.name = user.name.slice(0, 10);
-      }
-    }
-  }, [user]);
+  // useEffect(() => {
+  //   //todo truncate correctly bro !
+  //   if (user) {
+  //     if (user.name.length > 10) {
+  //       user.name = user.name.slice(0, 10);
+  //     }
+  //   }
+  // }, [user]);
   return (
     <div className="w-full">
       <div className="flex items-center gap-3 border p-2 rounded-lg hover:shadow-lg transition-shadow duration-300">
