@@ -4,7 +4,7 @@ import Avatar from "react-avatar";
 const ProfileButton = () => {
   return (
     <div className="w-full">
-      <div className="flex items-center gap-3 border p-2 rounded-lg">
+      <div className="flex items-center gap-3 border p-2 rounded-lg ">
         <div>
           <Avatar githubHandle="sitebase" size={50} round="4px" />
         </div>
