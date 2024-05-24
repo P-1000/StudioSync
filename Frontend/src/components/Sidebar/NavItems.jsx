@@ -38,7 +38,7 @@ const NavItems = () => {
   const location = useLocation();
   const [active, setActive] = useState("/dashboard");
   useEffect(() => {
-    setActive(location.pathname)
+    setActive(location.pathname);
   }, [location]);
   return (
     <div>
