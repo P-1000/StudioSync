@@ -7,6 +7,8 @@ import EditorDashboardPage from "./pages/Dashboard/EditorDashboard/EditorDashboa
 import TrackPage from "./pages/Tracks/TrackPage";
 import Sidebar from "./components/Sidebar/Sidebar";
 import "./App.css";
+import TrackComponenet from "./components/Tracks/Track.Component";
+import TrackCardPage from "./pages/Tracks/TrackCardPage";
 
 const App = () => {
   return (
@@ -19,7 +21,7 @@ const App = () => {
             <Route path="/tracks" element={<TrackPage />} />
             <Route path="/login" element={<Login />} />
             <Route path="/oauth2callback" element={<Temp />} />
-            <Route path="/tracks/:id" element={<Profile />} />
+            <Route path="/tracks/:id" element={<TrackCardPage />} />
           </Routes>
         </div>
       </Router>

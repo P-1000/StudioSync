@@ -7,7 +7,7 @@ const Editorpage = () => {
     <div className="px-10 ">
       <EditorMetrics />
       <div className="grid grid-cols-2">
-        <ActiveTracks />
+        {/* <ActiveTracks /> */}
       </div>
     </div>
   );
