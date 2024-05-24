@@ -4,7 +4,7 @@ import readJson from "r-json";
 import path from "path";
 import cors from "cors";
 import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
- 
+import {getSignedUrl} from "@aws-sdk/s3-request-presigner";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -51,14 +51,34 @@ app.get("/authinit", (req, res) => {
   res.send({ url: authenticationUrl });
 });
 
-
 app.get("/oauth2callback", async (req, res) => {
   const code = req.query.code;
   const youtubeUrl = await uploadVideo(code);
   res.send({ youtubeUrl });
 });
 
+app.get("/getuploadurl", async (req, res) => {
+  const url = await getUploadUrl();
+  res.send({ url });
+});
 
+const getUploadUrl = async () => {
+  try {
+    const filename = "tensa.mp4";
+    const params = {
+      Bucket: bucketName,
+      Key: filename,
+      ContentType: "video/mp4",
+    };
+    const command = new GetObjectCommand(params);
+    const url = await getSignedUrl(s3Client, command , { expiresIn: 3600 });
+    console.log("Upload URL generated successfully:", url );
+    return url;
+  } catch (error) {
+    console.error("Error generating upload URL:", error);
+    return error;
+  }
+};
 
 const uploadVideo = async (code) => {
   try {
@@ -68,7 +88,7 @@ const uploadVideo = async (code) => {
       Bucket: bucketName,
       Key: "multi-render.mp4",
     };
-    
+
     const res = await s3Client.send(new GetObjectCommand(s3Params));
     const bodyString = await res.Body;
 
@@ -97,8 +117,8 @@ const uploadVideo = async (code) => {
   } catch (error) {
     console.error("Error uploading video to YouTube:", error);
     return console.log("Error uploading video to YouTube:", error);
-  } 
-}
+  }
+};
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

@@ -104,6 +104,9 @@ const oauth = Youtube.authenticate({
 // };
 
 
+
+
+
 app.get('/', async(req, res) => {
     const uploadUrl = await getUploadUrl()
     res.send({ uploadUrl })
