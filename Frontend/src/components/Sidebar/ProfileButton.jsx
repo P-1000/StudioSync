@@ -5,6 +5,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 const ProfileButton = () => {
   const { user, isAuthenticated, isLoading, logout } = useAuth0();
   useEffect(() => {
+    //todo truncate correctly bro !
     if (user) {
       if (user.name.length > 10) {
         user.name = user.name.slice(0, 10);
