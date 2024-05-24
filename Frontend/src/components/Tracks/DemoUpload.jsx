@@ -1,18 +1,21 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { useDropzone } from "react-dropzone";
 
 const DemoUpload = () => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [uploadUrl, setUploadUrl] = useState("");
 
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    if (file && file.type.startsWith("video/")) {
+  const onDrop = (acceptedFiles) => {
+    const file = acceptedFiles[0];
+    if (file) {
       setSelectedFile(file);
     } else {
       alert("Please select a video file.");
     }
   };
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
   const handleUploadClick = async () => {
     if (!selectedFile) {
@@ -27,6 +30,7 @@ const DemoUpload = () => {
 
     try {
       console.log("Uploading file:", selectedFile.name);
+      console.log("Upload URL:", uploadUrl);
       const response = await axios.put(uploadUrl, selectedFile, {
         headers: {
           "Content-Type": selectedFile.type,
@@ -42,6 +46,7 @@ const DemoUpload = () => {
     try {
       const response = await axios.get("http://localhost:3000/getuploadurl");
       const url = response.data.url;
+      console.log("Upload URL:", url);
       setUploadUrl(url);
     } catch (error) {
       console.error("Error fetching upload URL:", error);
@@ -50,19 +55,16 @@ const DemoUpload = () => {
 
   return (
     <div className="flex flex-col items-center p-6 border border-gray-300 rounded-lg">
-      <input
-        type="file"
-        id="file-upload"
-        accept="video/*"
-        onChange={handleFileChange}
-        className="hidden"
-      />
-      <label
-        htmlFor="file-upload"
-        className="cursor-pointer bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition duration-300"
-      >
-        Select Video
-      </label>
+      <div {...getRootProps()} className="cursor-pointer">
+        <input {...getInputProps()} />
+        <label
+          className={`bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition duration-300 ${
+            isDragActive && "bg-blue-400"
+          }`}
+        >
+          {isDragActive ? "Drop the video here" : "Select or drop video"}
+        </label>
+      </div>
       {selectedFile && (
         <div className="mt-4">
           <p className="text-gray-700">{selectedFile.name}</p>

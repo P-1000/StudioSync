@@ -3,9 +3,16 @@ import Youtube from "youtube-api";
 import readJson from "r-json";
 import path from "path";
 import cors from "cors";
-import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
+import {
+  S3Client,
+  GetObjectCommand,
+  PutObjectCommand,
+} from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import dotenv from "dotenv";
+import aws from "aws-sdk";
+import { Sign, sign } from "crypto";
+
 
 dotenv.config();
 
@@ -23,6 +30,13 @@ const access = process.env.access;
 const secret = process.env.secret;
 
 const s3Client = new S3Client({
+  region,
+  accessKeyId: access,
+  secretAccessKey: secret,
+  signatureVersion: "v4",
+});
+
+const s3 = new aws.S3({
   region,
   accessKeyId: access,
   secretAccessKey: secret,
@@ -59,27 +73,14 @@ app.get("/oauth2callback", async (req, res) => {
 });
 
 app.get("/getuploadurl", async (req, res) => {
-  const url = await getUploadUrl();
+  const params = {
+    Bucket: bucketName,
+    Key: Math.random().toString(36).substring(7) + ".mp4",
+    Expires: 60 * 5,
+  };
+  const url = await s3.getSignedUrl("putObject", params);
   res.send({ url });
 });
-
-const getUploadUrl = async () => {
-  try {
-    const filename = "tensa.mp4";
-    const params = {
-      Bucket: bucketName,
-      Key: filename,
-      ContentType: "video/mp4",
-    };
-    const command = new GetObjectCommand(params);
-    const url = await getSignedUrl(s3Client, command, { expiresIn: 3600 });
-    console.log("Upload URL generated successfully:", url);
-    return url;
-  } catch (error) {
-    console.error("Error generating upload URL:", error);
-    return error;
-  }
-};
 
 const uploadVideo = async (code) => {
   try {
