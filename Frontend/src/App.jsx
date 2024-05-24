@@ -9,6 +9,7 @@ import Sidebar from "./components/Sidebar/Sidebar";
 import "./App.css";
 import TrackComponenet from "./components/Tracks/Track.Component";
 import TrackCardPage from "./pages/Tracks/TrackCardPage";
+import DemoUpload from "./components/Tracks/DemoUpload";
 
 const App = () => {
   return (
@@ -19,9 +20,9 @@ const App = () => {
           <Routes>
             <Route path="/" element={<EditorDashboardPage />} />
             <Route path="/tracks" element={<TrackPage />} />
+            <Route path="/upload" element={<DemoUpload />} />
             <Route path="/login" element={<Login />} />
             <Route path="/oauth2callback" element={<Temp />} />
-            <Route path="/tracks/:id" element={<TrackCardPage />} />
           </Routes>
         </div>
       </Router>

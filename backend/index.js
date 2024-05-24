@@ -4,7 +4,7 @@ import readJson from "r-json";
 import path from "path";
 import cors from "cors";
 import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
-import {getSignedUrl} from "@aws-sdk/s3-request-presigner";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -12,7 +12,8 @@ dotenv.config();
 const app = express();
 app.use(
   cors({
-    origin: "*",
+    origin: ["http://localhost:5173", "*"],
+    methods: ["GET", "POST", "PUT", "PATCH"],
   })
 );
 
@@ -71,8 +72,8 @@ const getUploadUrl = async () => {
       ContentType: "video/mp4",
     };
     const command = new GetObjectCommand(params);
-    const url = await getSignedUrl(s3Client, command , { expiresIn: 3600 });
-    console.log("Upload URL generated successfully:", url );
+    const url = await getSignedUrl(s3Client, command, { expiresIn: 3600 });
+    console.log("Upload URL generated successfully:", url);
     return url;
   } catch (error) {
     console.error("Error generating upload URL:", error);
