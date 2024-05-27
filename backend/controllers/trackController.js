@@ -2,8 +2,8 @@ import db from "../config/Db.js";
 
 // Track Creation
 export const createTrack = async (req, res) => {
-  const { creator_id } = req.user;
-  const { name, description, deadline } = req.body;
+  // const { creator_id } = req.body;
+  const { name, description, deadline, auth0_user_id } = req.body;
 
   if (!name || !description || !deadline) {
     return res.status(400).json({ message: "Missing required fields" });
@@ -13,7 +13,7 @@ export const createTrack = async (req, res) => {
     const roleCheckQuery = `
       SELECT role FROM users WHERE auth0_user_id = $1
     `;
-    const roleCheckResult = await db.query(roleCheckQuery, [creator_id]);
+    const roleCheckResult = await db.query(roleCheckQuery, [auth0_user_id]);
 
     if (roleCheckResult.rows.length === 0) {
       return res.status(404).json({ message: "User not found" });
@@ -28,7 +28,7 @@ export const createTrack = async (req, res) => {
     }
 
     const insertTrackQuery = `
-      INSERT INTO tracks (name, description, creator_id, status, deadline)
+      INSERT INTO tracks (name, description, auth0_user_id, status, deadline)
       VALUES ($1, $2, $3, $4, $5)
       RETURNING *
     `;
@@ -36,7 +36,7 @@ export const createTrack = async (req, res) => {
     const trackResult = await db.query(insertTrackQuery, [
       name,
       description,
-      creator_id,
+      auth0_user_id,
       status,
       deadline,
     ]);
@@ -50,4 +50,3 @@ export const createTrack = async (req, res) => {
     return res.status(500).json({ message: "Internal Server Error" });
   }
 };
-

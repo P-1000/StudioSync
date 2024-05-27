@@ -3,6 +3,7 @@ import db from "./config/Db.js";
 import cors from "cors";
 import authRouter from "./routes/authRoute.js";
 import { inviteRouter } from "./routes/invitationRoutes.js";
+import { trackRouter } from "./routes/trackRoutes.js";
 
 const app = express();
 const port = 3000;
@@ -13,9 +14,12 @@ app.use(
     credentials: true,
   })
 );
+
+app.use(express.json());
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
+app.use("/api/tracks", trackRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/invitations", inviteRouter);
 
