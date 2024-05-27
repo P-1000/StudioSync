@@ -10,6 +10,7 @@ import "./App.css";
 import TrackComponenet from "./components/Tracks/Track.Component";
 import TrackCardPage from "./pages/Tracks/TrackCardPage";
 import DemoUpload from "./components/Tracks/DemoUpload";
+import CheckUser from "./components/utils/CheckUser";
 
 const App = () => {
   return (
@@ -18,7 +19,8 @@ const App = () => {
         <Sidebar />
         <div className="main-content">
           <Routes>
-            <Route path="/" element={<EditorDashboardPage />} />
+            {/* <Route path="/" element={<EditorDashboardPage />} /> */}
+            <Route path="/" element={<CheckUser />} />
             <Route path="/tracks" element={<TrackPage />} />
             <Route path="/tracks/:id" element={<TrackCardPage />} />
             <Route path="/upload" element={<DemoUpload />} />

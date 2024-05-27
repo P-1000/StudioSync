@@ -1,6 +1,4 @@
-import React from "react";
-import Sidebar from "../../../components/Sidebar/Sidebar";
-import Editorpage from "../../../components/dashboard/Editorpage.component";
+import React,{useState , useEffect} from "react";
 
 const EditorDashboardPage = () => {
   return (
