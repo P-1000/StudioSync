@@ -6,6 +6,7 @@ import { inviteRouter } from "./routes/invitationRoutes.js";
 import { trackRouter } from "./routes/trackRoutes.js";
 import { connect, sendToQueue } from "./config/rabbitMq.js";
 
+
 const app = express();
 const port = 3000;
 
