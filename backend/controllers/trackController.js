@@ -66,3 +66,6 @@ export const getAllTracks = async (req, res) => {
     res.status(500).json({ error: "Database error: " + error.message });
   }
 };
+
+
+

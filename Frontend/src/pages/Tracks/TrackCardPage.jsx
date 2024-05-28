@@ -13,7 +13,7 @@ const TrackCardPage = () => {
         <Hero />
       </div>
       <div className="p-5">
-        <TempUpload/>
+        {/* <TempUpload/> */}
       </div>
     </div>
   );
