@@ -1,6 +1,6 @@
 import db from "../config/Db.js";
 
-app.post("/api/invitations", async (req, res) => {
+export const createInvitation = async (req, res) => {
   const { track_id, editor_email, creator_id } = req.body;
   // const creator_id = req.user.id;
 
@@ -15,9 +15,9 @@ app.post("/api/invitations", async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: "Database error: " + error.message });
   }
-});
+};
 
-app.post("/api/invitations/accept", async (req, res) => {
+export const acceptInvitation = async (req, res) => {
   const { invitation_id } = req.body;
   const editor_id = req.user.id;
 
@@ -44,25 +44,9 @@ app.post("/api/invitations/accept", async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: "Database error: " + error.message });
   }
-});
+};
 
-app.post("/api/invitations/reject", async (req, res) => {
-  const { invitation_id } = req.body;
-  const editor_id = req.user.id;
-
-  try {
-    await db.query(
-      `UPDATE invitations SET status = 'rejected', updated_at = CURRENT_TIMESTAMP
-             WHERE id = $1 AND editor_email = (SELECT email FROM users WHERE id = $2)`,
-      [invitation_id, editor_id]
-    );
-    res.status(200).json({ message: "Invitation rejected" });
-  } catch (error) {
-    res.status(500).json({ error: "Database error: " + error.message });
-  }
-});
-
-app.get("/api/invitations", async (req, res) => {
+export const getInvitation = async (req, res) => {
   const user_id = req.user.id;
 
   try {
@@ -74,7 +58,7 @@ app.get("/api/invitations", async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: "Database error: " + error.message });
   }
-});
+};
 
 //todo : rolecheck middle ware yet to implement :
 function checkRole(role) {
