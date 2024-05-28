@@ -12,7 +12,6 @@ async function processInvitation(channel, msg) {
     await channel.nack(msg, false, true);
   }
 }
-
 async function startWorker() {
   console.log("Starting worker...");
   try {

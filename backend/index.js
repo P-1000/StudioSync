@@ -39,6 +39,6 @@ app.use("/api/invitations", inviteRouter);
         console.log(e);
       });
     const message = "Hello from backend";
-    sendToQueue("invitations", JSON.stringify(message));
+    // sendToQueue("invitations", JSON.stringify(message));
   });
 })();
