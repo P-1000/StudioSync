@@ -1,5 +1,6 @@
 import db from "../config/Db.js";
 import express from "express";
+import checkRole from "../middleware/roleCheck.js";
 import {
   createInvitation,
   acceptInvitation,

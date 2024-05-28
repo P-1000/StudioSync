@@ -2,8 +2,8 @@ import db from "../config/Db.js";
 
 // Track Creation
 export const createTrack = async (req, res) => {
-  // const { creator_id } = req.body;
-  const { name, description, deadline, auth0_user_id } = req.body;
+  const { name, description, deadline } = req.body;
+  const auth0_user_id = req.user.sub;
 
   if (!name || !description || !deadline) {
     return res.status(400).json({ message: "Missing required fields" });

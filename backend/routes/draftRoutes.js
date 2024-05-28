@@ -4,10 +4,11 @@ import {
   getDrafts,
   updateDraft,
 } from "../controllers/draftsController";
+import { verifyToken } from "../middleware/verify";
 
 const draftRouter = express.Router();
 
-draftRouter.post("/:track_id", createDraft);
+draftRouter.post("/:track_id",verifyToken ,  createDraft);
 
 draftRouter.get("/:track_id", getDrafts);
 
