@@ -50,3 +50,19 @@ export const createTrack = async (req, res) => {
     return res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
+// Get all tracks
+export const getAllTracks = async (req, res) => {
+  const { id } = req.query;
+  const auth0_user_id = id;
+  try {
+    const result = await db.query(
+      `SELECT * FROM tracks WHERE auth0_user_id = $1 OR id IN
+           (SELECT track_id FROM project_memberships WHERE auth0_user_id = $1)`,
+      [auth0_user_id]
+    );
+    res.status(200).json(result.rows);
+  } catch (error) {
+    res.status(500).json({ error: "Database error: " + error.message });
+  }
+};
