@@ -2,8 +2,8 @@ import db from "../config/Db.js";
 import { sendToQueue } from "../config/rabbitMq.js";
 
 export const createInvitation = async (req, res) => {
-  const { track_id, editor_email, creator_id, editor_id } = req.body;
-  // const creator_id = req.user.id;
+  const { track_id, editor_email, editor_id } = req.body;
+  const creator_id = req.user.sub;
   try {
     const track = await db.query(
       `SELECT * FROM tracks WHERE id = $1 AND creator_id = $2`,
@@ -55,7 +55,7 @@ export const createInvitation = async (req, res) => {
 
 export const acceptInvitation = async (req, res) => {
   const { invitation_id } = req.body;
-  const editor_id = req.user.id;
+  const editor_id = req.user.sub;
 
   const client = await db.connect();
 
@@ -96,7 +96,7 @@ export const acceptInvitation = async (req, res) => {
 };
 
 export const getInvitation = async (req, res) => {
-  const user_id = req.user.id;
+  const user_id = req.user.email;
 
   try {
     const result = await db.query(
