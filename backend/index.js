@@ -4,6 +4,7 @@ import cors from "cors";
 import authRouter from "./routes/authRoute.js";
 import { inviteRouter } from "./routes/invitationRoutes.js";
 import { trackRouter } from "./routes/trackRoutes.js";
+import { connect, sendToQueue } from "./config/rabbitMq.js";
 
 const app = express();
 const port = 3000;
@@ -23,15 +24,20 @@ app.use("/api/tracks", trackRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/invitations", inviteRouter);
 
-app.listen(port, () => {
-  console.log("connecting to DB >>>");
-  db.connect()
-    .then(() => {
-      console.log("Connected to DB....");
-    })
-    .catch((e) => {
-      console.log("Error connecting to DB....");
-      console.log(e);
-    });
-  console.log(` app listening at port ${port}`);
-});
+(async () => {
+  await connect();
+  app.listen(3000, () => {
+    console.log(`Server is running on port ${3000}`);
+    console.log("connecting to DB >>>");
+    db.connect()
+      .then(() => {
+        console.log("Connected to DB....");
+      })
+      .catch((e) => {
+        console.log("Error connecting to DB....");
+        console.log(e);
+      });
+    const message = "Hello from backend";
+    sendToQueue("invitations", JSON.stringify(message));
+  });
+})();
