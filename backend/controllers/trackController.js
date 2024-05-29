@@ -2,8 +2,8 @@ import db from "../config/Db.js";
 
 // Track Creation
 export const createTrack = async (req, res) => {
-  // const { creator_id } = req.body;
-  const { name, description, deadline, auth0_user_id } = req.body;
+  const { name, description, deadline } = req.body;
+  const auth0_user_id = req.user.id;
 
   if (!name || !description || !deadline) {
     return res.status(400).json({ message: "Missing required fields" });
@@ -59,12 +59,14 @@ export const getAllTracks = async (req, res) => {
     const result = await db.query(
       `SELECT * FROM tracks `,
       // [auth0_user_id]
+// =======
+//       `SELECT * FROM tracks WHERE auth0_user_id = $1 OR id IN
+//            (SELECT track_id FROM project_membershipsproject_memberships WHERE auth0_user_id = $1)`,
+//       [auth0_user_id]
+// >>>>>>> feat
     );
     res.status(200).json(result.rows);
   } catch (error) {
     res.status(500).json({ error: "Database error: " + error.message });
   }
 };
-
-
-

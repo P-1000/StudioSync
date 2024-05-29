@@ -1,95 +1,22 @@
 import db from "../config/Db.js";
-import express from "express"
+import express from "express";
+import checkRole from "../middleware/roleCheck.js";
+import {
+  createInvitation,
+  acceptInvitation,
+  getInvitation,
+} from "../controllers/invitationController.js";
+import { verifyToken } from "../middleware/verify.js";
 
 export const inviteRouter = express.Router();
 
-inviteRouter.post('/createnew', async (req, res) => {
-    const { track_id, editor_email } = req.body;
-    const creator_id = req.user.id; 
+inviteRouter.post(
+  "/createnew",
+  verifyToken,
+  checkRole("creator"),
+  createInvitation
+);
 
-    try {
-        const result = await db.query(
-            `INSERT INTO invitations (track_id, creator_id, editor_email, status)
-             VALUES ($1, $2, $3, 'pending')
-             RETURNING *`,
-            [track_id, creator_id, editor_email]
-        );
-        res.status(201).json(result.rows[0]);
-    } catch (error) {
-        res.status(500).json({ error: 'Database error: ' + error.message });
-    }
-});
+inviteRouter.post("/accept", verifyToken, acceptInvitation);
 
-
-inviteRouter.post('/accept', async (req, res) => {
-    const { invitation_id } = req.body;
-    const editor_id = req.user.id; 
-
-    try {
-        // Update invitation status to accepted
-        await db.query(
-            `UPDATE invitations SET status = 'accepted', updated_at = CURRENT_TIMESTAMP
-             WHERE id = $1 AND editor_email = (SELECT email FROM users WHERE id = $2)`,
-            [invitation_id, editor_id]
-        );
-
-        // Add editor to the project
-        const invitation = await db.query(
-            `SELECT track_id FROM invitations WHERE id = $1`,
-            [invitation_id]
-        );
-        await db.query(
-            `INSERT INTO project_memberships (track_id, editor_id)
-             VALUES ($1, $2)`,
-            [invitation.rows[0].track_id, editor_id]
-        );
-
-        res.status(200).json({ message: 'Invitation accepted' });
-    } catch (error) {
-        res.status(500).json({ error: 'Database error: ' + error.message });
-    }
-});
-
-
-inviteRouter.post('/reject', async (req, res) => {
-    const { invitation_id } = req.body;
-    const editor_id = req.user.id; 
-
-    try {
-        await db.query(
-            `UPDATE invitations SET status = 'rejected', updated_at = CURRENT_TIMESTAMP
-             WHERE id = $1 AND editor_email = (SELECT email FROM users WHERE id = $2)`,
-            [invitation_id, editor_id]
-        );
-        res.status(200).json({ message: 'Invitation rejected' });
-    } catch (error) {
-        res.status(500).json({ error: 'Database error: ' + error.message });
-    }
-});
-
-
-inviteRouter.get('/get', async (req, res) => {
-    const user_id = req.user.id; 
-
-    try {
-        const result = await db.query(
-            `SELECT * FROM invitations WHERE editor_email = (SELECT email FROM users WHERE id = $1)`,
-            [user_id]
-        );
-        res.status(200).json(result.rows);
-    } catch (error) {
-        res.status(500).json({ error: 'Database error: ' + error.message });
-    }
-});
-
-
-
-//todo : rolecheck middle ware yet to implement : 
-function checkRole(role) {
-    return (req, res, next) => {
-        if (req.user.role !== role) {
-            return res.status(403).json({ message: 'Forbidden' });
-        }
-        next();
-    };
-}
+inviteRouter.get("/get", verifyToken, checkRole("editor"), getInvitation);
