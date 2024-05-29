@@ -1,20 +1,20 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect , useContext } from "react";
 import { RandomAvatar } from "react-random-avatars";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import { useAuth0 } from "@auth0/auth0-react";
+import { AuthContext } from "../../context/userContext";
 
 const ProjectCards = () => {
-  const { user, isLoading } = useAuth0();
+  const { authUser, isLoading } = useContext(AuthContext);
   const [tracks, setTracks] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (user) {
-      getAllTracks(user?.sub);
+    if (authUser) {
+      getAllTracks(authUser.id);
     }
-  }, [user]);
+  }, [authUser]);
 
   const getAllTracks = async (id) => {
     try {
