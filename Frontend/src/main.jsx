@@ -6,8 +6,8 @@ import { Auth0Provider } from "@auth0/auth0-react";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <Auth0Provider
-    domain={process.env.React_App_Domain}
-    clientId={process.env.React_App_ClientId}
+    domain={"bankaidayo.us.auth0.com"}
+    clientId="rJkdjOGANXlBEu6NwdoDbqaMnnYOWc2j"
     authorizationParams={{
       redirect_uri: "http://localhost:5173/",
       scope: "openid profile email",

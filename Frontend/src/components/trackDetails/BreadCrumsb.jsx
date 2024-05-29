@@ -1,13 +1,13 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 import { FaFolderMinus } from "react-icons/fa";
-import { FaEdit } from "react-icons/fa";
+import { MdModeEdit } from "react-icons/md";
 import { BsThreeDots } from "react-icons/bs";
 
 const BreadCrumsb = () => {
   const { id } = useParams();
   return (
-    <div className="capitalize flex justify-between w-full px-4 items-start">
+    <div className="capitalize flex justify-between w-full px-4 items-center">
       <div>
         <div className="flex gap-2 items-center">
           <div className="w-5 h-5 bg-green-700 rounded-sm" />
@@ -36,8 +36,8 @@ const BreadCrumsb = () => {
         </div>
       </div>
       <div className="flex gap-2">
-        <FaEdit className="w-5 h-5 text-gray-500" />
-        <BsThreeDots className="w-5 h-5 text-gray-500" />
+        <MdModeEdit className=" text-gray-800 p-2 border rounded-lg text-4xl hover:bg-black transition-all hover:text-white cursor-pointer" />
+        <BsThreeDots className=" text-gray-800 border p-2 rounded-lg text-4xl hover:bg-black transition-all hover:text-white cursor-pointer" />
       </div>
     </div>
   );
