@@ -9,10 +9,13 @@ export const useAuthContext = () => {
 export const AuthContextProvider = ({ children }) => {
   const [authUser, setAuthUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [token, setToken] = useState(null);
 
   useEffect(() => {
     const fetchAuthUser = async () => {
       const user = JSON.parse(localStorage.getItem("studiouser")) || null;
+      const tok = localStorage.getItem("token") || null;
+      setToken(tok);
       setAuthUser(user);
       setIsLoading(false);
     };
@@ -23,7 +26,16 @@ export const AuthContextProvider = ({ children }) => {
   const isAuthenticated = !!authUser;
 
   return (
-    <AuthContext.Provider value={{ authUser, setAuthUser, isAuthenticated, isLoading }}>
+    <AuthContext.Provider
+      value={{
+        authUser,
+        setAuthUser,
+        isAuthenticated,
+        isLoading,
+        token,
+        setToken,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

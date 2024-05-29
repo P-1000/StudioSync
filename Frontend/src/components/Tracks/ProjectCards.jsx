@@ -1,4 +1,4 @@
-import React, { useState, useEffect , useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { RandomAvatar } from "react-random-avatars";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { Link } from "react-router-dom";
@@ -6,7 +6,7 @@ import axios from "axios";
 import { AuthContext } from "../../context/userContext";
 
 const ProjectCards = () => {
-  const { authUser, isLoading } = useContext(AuthContext);
+  const { authUser, isLoading, token } = useContext(AuthContext);
   const [tracks, setTracks] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -19,7 +19,12 @@ const ProjectCards = () => {
   const getAllTracks = async (id) => {
     try {
       const res = await axios.get(
-        `http://localhost:3000/api/tracks/get?id=${id}`
+        `http://localhost:3000/api/tracks/get?id=${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       setTracks(res.data);
       setLoading(false);
@@ -31,12 +36,14 @@ const ProjectCards = () => {
   const formatDate = (dateString) => {
     const options = {
       // year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
     };
-    return new Intl.DateTimeFormat('en-US', options).format(new Date(dateString));
+    return new Intl.DateTimeFormat("en-US", options).format(
+      new Date(dateString)
+    );
   };
 
   if (isLoading) {
