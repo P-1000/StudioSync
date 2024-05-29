@@ -28,16 +28,16 @@ const Hero = () => {
             </div>
             <div className="flex gap-4 justify-around w-full">
               <div>
-                <h1 className="text-black font-bold">CREATED</h1>
-                <p className="font-medium text-black">12th September, 2021</p>
+                <h1 className="text-zinc-100 font-bold">CREATED</h1>
+                <p className="font-medium text-zinc-200">12th September, 2021</p>
               </div>
               <div>
-                <h1 className="text-black font-bold">UPDATED</h1>
-                <p className=" font-medium text-black">12th September, 2021</p>
+                <h1 className="text-zinc-100 font-bold">UPDATED</h1>
+                <p className=" font-medium text-zinc-200">12th September, 2021</p>
               </div>
               <div>
-                <h1 className="text-black font-bold">DEADLINE</h1>
-                <p className="font-medium text-black">30th September, 2021</p>
+                <h1 className="text-zinc-100 font-bold">DEADLINE</h1>
+                <p className="font-medium text-zinc-200">30th September, 2021</p>
               </div>
             </div>
           </div>

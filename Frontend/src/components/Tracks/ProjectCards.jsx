@@ -15,7 +15,7 @@ const ProjectCards = () => {
       getAllTracks(user?.sub);
     }
   }, [user]);
-  
+
   const getAllTracks = async (id) => {
     try {
       const res = await axios.get(
@@ -26,6 +26,17 @@ const ProjectCards = () => {
     } catch (error) {
       console.error("Error fetching tracks:", error);
     }
+  };
+
+  const formatDate = (dateString) => {
+    const options = {
+      // year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    };
+    return new Intl.DateTimeFormat('en-US', options).format(new Date(dateString));
   };
 
   if (isLoading) {
@@ -58,7 +69,7 @@ const ProjectCards = () => {
             </div>
             <div className="p-2 flex gap-2 flex-wrap">
               <h1 className="bg-gray-200 rounded-full px-2 py-[1px]">
-                {new Date(track.updated_at).toLocaleString()}
+                {formatDate(track.updated_at)}
               </h1>
               <h1 className="bg-[#5577ff54] rounded-full px-2 py-[1px]">
                 {track.status}

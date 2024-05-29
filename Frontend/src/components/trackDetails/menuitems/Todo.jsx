@@ -1,8 +1,13 @@
-import React from 'react'
+import React from 'react';
+import CustomKanban from '../CustomKanban';
 
 const Todo = () => {
   return (
-    <div>Todo</div>
+    <>
+      <div className="w-full flex items-center">
+        <CustomKanban />
+      </div>
+    </>
   )
 }
 
