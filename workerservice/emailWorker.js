@@ -1,6 +1,7 @@
 import nodemailer from "nodemailer";
 
-export const sendMail = async () => {
+export const sendMail = async (invitation) => {
+  const { editor_email, track_id, invitation_id } = invitation;
   try {
     const transporter = nodemailer.createTransport({
       service: "gmail",
@@ -11,9 +12,12 @@ export const sendMail = async () => {
     });
     const mailOptions = {
       from: process.env.EMAIL_HOST,
-      to: "earn.vpn@gmail.com",
+      to: editor_email,
       subject: "Studio Sync Test Email",
-      text: "This is a test email from Studio Sync.",
+      text: `
+      You have been invited to collaborate on a track with ID: ${track_id}
+      link to accept: http://localhost:3000/accept-invitation/${track_id}/${invitation_id}     
+      `,
     };
 
     const info = await transporter.sendMail(mailOptions);
