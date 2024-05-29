@@ -54,7 +54,7 @@ const TempUpload = () => {
   };
 
   return (
-    <div className="flex flex-col items-center p-6 border border-gray-300 rounded-lg">
+    <div className="w-full flex flex-col items-center p-6 border border-gray-300 rounded-lg">
       <div {...getRootProps()} className="cursor-pointer">
         <input {...getInputProps()} />
         <label

@@ -6,7 +6,7 @@ import ProfileButton from "./ProfileButton";
 
 const Sidebar = () => {
   return (
-    <div className="flex flex-col border gap-5 px-3 items-baseline w-60 poppins h-screen">
+    <div className="fixed left-0 top-0 z-50 bg-white flex flex-col border gap-5 px-3 items-baseline w-60 poppins h-screen">
       <div className="px-3">
         <Logo />
       </div>

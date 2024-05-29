@@ -5,9 +5,9 @@ import LatestProjects from "./LatestProjects";
 const TrackComponenet = () => {
   return (
     <div className="flex flex-col gap-5">
-    <WelcomeUser/>
+      <WelcomeUser />
       {/* <Search /> */}
-      <LatestProjects/>
+      <LatestProjects />
       {/* <Tracks /> */}
     </div>
   );

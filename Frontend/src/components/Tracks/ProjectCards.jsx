@@ -28,6 +28,17 @@ const ProjectCards = () => {
     }
   };
 
+  const formatDate = (dateString) => {
+    const options = {
+      // year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    };
+    return new Intl.DateTimeFormat('en-US', options).format(new Date(dateString));
+  };
+
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -58,7 +69,7 @@ const ProjectCards = () => {
             </div>
             <div className="p-2 flex gap-2 flex-wrap">
               <h1 className="bg-gray-200 rounded-full px-2 py-[1px]">
-                {new Date(track.updated_at).toLocaleString()}
+                {formatDate(track.updated_at)}
               </h1>
               <h1 className="bg-[#5577ff54] rounded-full px-2 py-[1px]">
                 {track.status}

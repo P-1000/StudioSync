@@ -6,6 +6,8 @@ import { Auth0Provider } from "@auth0/auth0-react";
 import { Provider } from "use-context-provider";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
+
+
   <Provider>
     <Auth0Provider
       domain={process.env.React_App_Domain}
@@ -19,4 +21,5 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       <App />
     </Auth0Provider>
   </Provider>
+
 );

@@ -54,12 +54,16 @@ export const createTrack = async (req, res) => {
 // Get all tracks
 export const getAllTracks = async (req, res) => {
   const { id } = req.query;
-  const auth0_user_id = id;
+  // const auth0_user_id = id;
   try {
     const result = await db.query(
-      `SELECT * FROM tracks WHERE auth0_user_id = $1 OR id IN
-           (SELECT track_id FROM project_membershipsproject_memberships WHERE auth0_user_id = $1)`,
-      [auth0_user_id]
+      `SELECT * FROM tracks `,
+      // [auth0_user_id]
+// =======
+//       `SELECT * FROM tracks WHERE auth0_user_id = $1 OR id IN
+//            (SELECT track_id FROM project_membershipsproject_memberships WHERE auth0_user_id = $1)`,
+//       [auth0_user_id]
+// >>>>>>> feat
     );
     res.status(200).json(result.rows);
   } catch (error) {

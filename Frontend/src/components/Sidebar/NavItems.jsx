@@ -49,8 +49,8 @@ const NavItems = () => {
               <li
                 className={`${
                   active.startsWith(item.link)
-                    ? "bg-[#5577FF] flex items-center gap-3 rounded-md text-white  w-full p-2 transition-colors duration-500 ease-in-out"
-                    : "hover:bg-blue-300/40 hover:shadow-md  flex items-center gap-3 rounded-md   w-full p-2 transition-all duration-200 ease-in-out"
+                    ? "bg-[#5577FF] flex items-center gap-3 rounded-lg text-white  w-full p-2 px-4 transition-colors duration-500 ease-in-out"
+                    : "hover:bg-blue-300/40 hover:shadow-md flex items-center gap-3 px-4 rounded-md w-full p-2 transition-all duration-200 ease-in-out"
                 } `}
               >
                 {item.icon}
