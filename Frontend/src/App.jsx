@@ -36,7 +36,7 @@ const MainContent = () => {
       )}
       <div className={`main-content ${hideSidebar ? 'w-full' : 'w-[82%]'}`}>
         <Routes>
-          <Route path="/" element={<CheckUser />} />
+          {/* <Route path="/" element={<CheckUser />} /> */}
           <Route path="/tracks" element={<TrackPage />} />
           <Route path="/tracks/:id" element={<TrackCardPage />} />
           <Route path="/upload" element={<DemoUpload />} />

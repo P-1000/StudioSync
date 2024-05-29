@@ -1,9 +1,9 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useContext } from "react";
 import Avatar from "react-avatar";
-import { useAuth0 } from "@auth0/auth0-react";
+import { AuthContext } from "../../context/userContext";
 
 const ProfileButton = () => {
-  const { user, isAuthenticated, isLoading, logout } = useAuth0();
+  const { authUser, isAuthenticated, isLoading } = useContext(AuthContext);
   // useEffect(() => {
   //   //todo truncate correctly bro !
   //   if (user) {
@@ -27,12 +27,17 @@ const ProfileButton = () => {
           <>
             <div>
               {isAuthenticated ? (
-                <Avatar src={user.picture} size={50} round="4px" />
+                <Avatar
+                  name={authUser?.username}
+                  src={authUser?.picture}
+                  size={50}
+                  round="4px"
+                />
               ) : null}
             </div>
             <div className="flex flex-col w-full">
-              <h1 className="text-base font-medium">
-                {isAuthenticated ? user.name : "Login to Your Account"}
+              <h1 className="text-base font-medium capitalize">
+                {isAuthenticated ? authUser?.username : "Login to Your Account"}
               </h1>
               <p className="text-slate-400 font-light text-sm">
                 {isAuthenticated ? "Free Account" : ""}
