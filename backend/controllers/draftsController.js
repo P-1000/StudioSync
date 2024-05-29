@@ -2,16 +2,9 @@ import db from "../config/Db.js";
 
 export const createDraft = async (req, res) => {
   const { track_id } = req.params;
-  const {
-    video_url,
-    type,
-    title,
-    description,
-    tags,
-    thumbnail_url,
-  } = req.body;
+  const { video_url, type, title, description, tags, thumbnail_url } = req.body;
 
-  const editor_id = req.user.sub;
+  const editor_id = req.user.id;
 
   if (
     !editor_id ||
@@ -80,7 +73,7 @@ export const getDrafts = async (req, res) => {
 };
 
 export const updateDraft = async (req, res) => {
-  //todo : role check , protect this route 
+  //todo : role check , protect this route
   const { track_id, draft_id } = req.params;
   const { status } = req.body;
 
