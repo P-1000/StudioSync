@@ -1,7 +1,8 @@
 import React from "react";
 import WelcomeUser from "../utils/WelcomeUser";
+import ProjectCards from "./ProjectCards";
 
-const CreatorTracksComponent = ({ setShow }) => {
+const CreatorTracksComponent = ({ setShow, tracks }) => {
   return (
     <div className="flex flex-col gap-5 px-6 bg-white shadow-md rounded-lg">
       <div className="flex justify-between items-center w-full mb-4">
@@ -18,7 +19,9 @@ const CreatorTracksComponent = ({ setShow }) => {
       </div>
       <div className="flex flex-col gap-3">
         <h1 className="text-gray-800 text-3xl font-semibold">Your Tracks</h1>
-        {/* Render list of tracks here if needed */}
+        <div>
+          <ProjectCards />
+        </div>
       </div>
     </div>
   );
