@@ -8,15 +8,15 @@ const Hero = () => {
     <div className="w-full px-4 mt-6">
       <div
         className="
-        bg-gradient-to-r from-violet-500 to-pink-500
-          object-contain bg-no-repeat w-full h-72 rounded-2xl flex flex-col justify-end opacity-70
+        bg-gradient-to-r from-violet-500 to-pink-400
+          object-contain bg-no-repeat w-full h-72 rounded-2xl flex flex-col justify-end 
         "
       >
         <div className="px-10 py-4">
           <div className="flex justify-around">
             <div className="flex items-center gap-2 w-5/12">
               <img
-                src="https://cdn.pixabay.com/photo/2022/09/11/06/01/apple-7446229_960_720.png"
+                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQsK4_r1B9Z5hRIbJ1i6C0UZYkx8CKo0y45Hh3b22_mo1j_7jGOE0BWSu__nO-6p6R-XJI&usqp=CAU"
                 className="w-12 h-12 object-contain rounded-full"
               />
               <div>
