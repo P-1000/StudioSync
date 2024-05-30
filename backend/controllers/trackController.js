@@ -51,7 +51,7 @@ export const createTrack = async (req, res) => {
   }
 };
 
-// Get all tracks
+// Get all tracks for creator
 export const getAllTracks = async (req, res) => {
   const userid = req.user.id;
   try {
@@ -59,6 +59,24 @@ export const getAllTracks = async (req, res) => {
       `SELECT * FROM tracks WHERE creator_id = $1`,
       [userid]
     );
+    res.status(200).json({
+      track: result.rows,
+    });
+  } catch (error) {
+    res.status(500).json({ error: "Database error: " + error.message });
+  }
+};
+
+//Get all tracks for a editor :
+export const getAllTracksEditor = async (req, res) => {
+  const userid = req.user.id;
+  try {
+    const trackQuery = `
+    SELECT track.* , pm.member_id FROM tracks track
+    LEFT JOIN project_memberships pm ON track.id = pm.track_id
+    WHERE pm.member_id = $1
+    `;
+    const result = await db.query(trackQuery, [userid]);
     res.status(200).json({
       track: result.rows,
     });

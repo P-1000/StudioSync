@@ -18,14 +18,11 @@ const ProjectCards = () => {
 
   const getAllTracks = async (id) => {
     try {
-      const res = await axios.get(
-        `http://localhost:3000/api/tracks/get`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const res = await axios.get(`http://localhost:3000/api/tracks/geteditortracks`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setTracks(res.data.track);
       setLoading(false);
     } catch (error) {
@@ -50,7 +47,7 @@ const ProjectCards = () => {
     return <div>Loading...</div>;
   }
 
-  // Render track cards when tracks are available
+
   return (
     <div className="flex flex-wrap gap-5 py-2 mt-2">
       {tracks.map((track) => (

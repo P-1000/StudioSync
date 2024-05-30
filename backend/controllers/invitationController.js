@@ -60,7 +60,6 @@ export const acceptInvitation = async (req, res) => {
   try {
     const client = await db.connect();
 
-    // Check if the invitation exists and is pending
     const invitationQuery = await client.query(
       `SELECT track_id, editor_email 
        FROM invitations 
@@ -69,7 +68,6 @@ export const acceptInvitation = async (req, res) => {
     );
 
     if (invitationQuery.rows.length === 0) {
-      // Invitation not found or already accepted/rejected
       await client.release();
       return res
         .status(404)
@@ -80,7 +78,6 @@ export const acceptInvitation = async (req, res) => {
 
     await client.query("BEGIN");
 
-    // Update invitation status to 'accepted'
     await client.query(
       `UPDATE invitations 
        SET status = 'accepted', updated_at = CURRENT_TIMESTAMP 
@@ -88,7 +85,6 @@ export const acceptInvitation = async (req, res) => {
       [invitation_id]
     );
 
-    // Add editor to project memberships
     await client.query(
       `INSERT INTO project_memberships (track_id, member_id)
        VALUES ($1, $2)`,
