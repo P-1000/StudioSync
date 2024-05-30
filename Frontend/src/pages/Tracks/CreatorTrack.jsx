@@ -1,9 +1,38 @@
-import React from 'react'
+import React, { useState, useContext, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import BreadCrumsb from "../../components/trackDetails/BreadCrumsb";
+import Hero from "../../components/trackDetails/Hero";
+import TempUpload from "../../components/trackDetails/Temp";
+import TrackMenuItems from "../../components/trackDetails/TrackMenuItems";
+import { AuthContext } from "../../context/userContext";
+import axios from "axios";
 
 const CreatorTrack = () => {
+  const { id } = useParams();
+  const { authUser } = useContext(AuthContext);
+  const [track, setTrack] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
+  const getTrack = async () => {
+    const res = await axios.get(`http://localhost:5000/api/tracks/get/${id}`);
+  };
   return (
-    <div>CreatorTrack</div>
-  )
-}
+    <div className=" w-full flex flex-col">
+      <div className="border-b-2 p-5">
+        <BreadCrumsb />
+        <Hero />
+      </div>
+      <div className="">
+        {/* <TempUpload/> */}
+        <TrackMenuItems />
+      </div>
+    </div>
+  );
+};
 
-export default CreatorTrack
+export default CreatorTrack;
+
+//todo : add the track info to the creator track page
+//todo : add the track menu items to the creator track page
+//todo : add assets management to the creator track page
+// todo : add the draft review to the creator track page
+// todo : add the gemini ai meta data suggestion to the creator track page

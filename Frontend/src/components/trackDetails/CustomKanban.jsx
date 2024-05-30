@@ -13,7 +13,7 @@ const CustomKanban = () => {
 
 const DEFAULT_CARDS = [
   // BACKLOG
-  { title: "Look into shiva's tits", id: "1", column: "backlog" },
+  { title: "Look into shiva's ", id: "1", column: "backlog" },
   { title: "SOX compliance checklist", id: "2", column: "backlog" },
   { title: "[SPIKE] Migrate to Azure", id: "3", column: "backlog" },
   { title: "Document Notifications service", id: "4", column: "backlog" },
@@ -216,7 +216,7 @@ const Card = ({ title, id, column, handleDragStart }) => {
         layoutId={id}
         draggable="true"
         onDragStart={(e) => handleDragStart(e, { title, id, column })}
-        className="cursor-grab rounded-lg border border-neutral-700 bg-neutral-800 p-3 active:cursor-grabbing"
+        className="cursor-grab rounded-md border border-neutral-700 bg-neutral-800 p-3 active:cursor-grabbing"
       >
         <p className="text-sm text-neutral-100">{title}</p>
       </motion.div>
