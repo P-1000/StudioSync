@@ -97,18 +97,23 @@ export const getTrackById = async (req, res) => {
       FROM tracks track
       LEFT JOIN project_memberships pm ON track.id = pm.track_id
       LEFT JOIN users u ON CAST(pm.member_id AS INTEGER) = u.id
-      WHERE track.id = $1
+      WHERE track.id = $1 
     `;
 
-    if (userRole === 'creator') {
-      trackQuery += ' AND track.creator_id = $2';
+    if (userRole === "creator") {
+      trackQuery += " AND track.creator_id = $2";
     }
 
-    const trackResult = await db.query(trackQuery, [id, userId]); 
+    if (userRole === "editor") {
+      trackQuery += " AND pm.member_id = $2";
+    }
+
+    const trackResult = await db.query(trackQuery, [id, userId]);
 
     if (trackResult.rows.length === 0) {
       return res.status(404).json({
-        message: "Track not found or you are not authorized to access this track",
+        message:
+          "Track not found or you are not authorized to access this track",
       });
     }
 
@@ -142,3 +147,29 @@ export const getTrackById = async (req, res) => {
   }
 };
 
+export const getTrackMembers = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const query = `
+    SELECT track.id, pm.member_id, u.username as member_username, u.email as member_email
+    FROM tracks track
+    LEFT JOIN project_memberships pm ON track.id = pm.track_id
+    LEFT JOIN users u ON CAST(pm.member_id AS INTEGER) = u.id
+    WHERE track.id = $1 
+    `;
+    const result = await db.query(query, [id]);
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: "No members found for the track" });
+    }
+    const members = result.rows.map((row) => ({
+      member_id: row.member_id,
+      member_username: row.member_username,
+      member_email: row.member_email,
+    }));
+
+    res.status(200).json({ members: members });
+  } catch (error) {
+    res.status(500).json({ error: "Database error: " + error.message });
+  }
+};

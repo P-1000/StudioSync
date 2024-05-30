@@ -35,39 +35,25 @@ const Trackinfo = (props) => {
               </span>
             </div>
           </div>
-          <div className="flex items-center gap-2">
-            <MdPerson className="text-2xl" />
-            <h1 className="font-semibold">Members</h1>
-          </div>
-          {track?.memberships &&
-            track.memberships.length > 0 &&
-            track.memberships.map((member) => (
-              <div className="w-full flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <img
-                    src={member?.user?.avatar}
-                    alt="avatar"
-                    className="w-8 h-8 rounded-full"
-                  />
-                  <img
-                    src={member?.user?.avatar}
-                    alt="avatar"
-                    className="w-8 h-8 rounded-full"
-                  />
-                  <img
-                    src={member?.user?.avatar}
-                    alt="avatar"
-                    className="w-8 h-8 rounded-full"
-                  />
+          <div className="flex justify-between w-full gap-10">
+            <div className="flex items-center gap-2">
+              <MdPerson className="text-2xl" />
+              <h1 className="font-semibold">Members</h1>
+            </div>
+            {track?.memberships &&
+              track.memberships.length > 0 &&
+              track.memberships.map((member) => (
+                <div className="w-full flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <h1>{member?.member_username}</h1>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+          </div>
         </div>
         <div className="w-3/5 flex flex-col items-start gap-4">
           <h1 className="text-xl font-semibold">Description</h1>
-          <p className="text-gray-500">
-            {track?.description}
-          </p>
+          <p className="text-gray-500">{track?.description}</p>
         </div>
       </div>
     </>

@@ -5,13 +5,12 @@ import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 
 const MembershipManagement = () => {
-
   const location = useLocation();
-  const trackid_ = location.pathname.split("/")[2]
-  const id = parseInt(trackid_)
+  const trackid_ = location.pathname.split("/")[2];
+  const id = parseInt(trackid_);
 
   const [email, setEmail] = useState("");
-  const [members, setMembers] = useState([{ id: 1, name: "John Doe" }]);
+  const [members, setMembers] = useState();
   const [emailStatus, setEmailStatus] = useState({ valid: true, exists: true });
   const navigate = useNavigate();
   const { token } = useContext(AuthContext);
@@ -109,8 +108,19 @@ const MembershipManagement = () => {
     }
   };
 
+  const getMembers = async () => {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const response = await axios.get(`/api/tracks/getmembers/${id}`, config);
+    setMembers(response.data.members);
+  };
+
   useEffect(() => {
     udpateParams(true);
+    getMembers();
     return () => {
       udpateParams(false);
     };
@@ -121,12 +131,18 @@ const MembershipManagement = () => {
       <div className="mb-6">
         <h1 className="text-2xl font-bold mb-4">Members</h1>
         <div className="space-y-4">
-          {members.map((member) => (
+          {members && members.map((member) => (
             <div
-              key={member.id}
+              key={member.member_id}
               className="flex justify-between items-center p-4 bg-gray-100 rounded-lg"
             >
-              <h2 className="text-lg font-semibold">{member.name}</h2>
+              <div>
+                <h2 className="text-xl font-semibold">
+                  {member.member_username}
+                </h2>
+                <h3 className="text-sm">{member.member_email}</h3>
+              </div>
+
               <button className="text-red-600 font-semibold hover:underline">
                 Remove
               </button>
