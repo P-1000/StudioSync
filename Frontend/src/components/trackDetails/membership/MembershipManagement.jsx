@@ -1,29 +1,30 @@
 import React, { useState, useContext, useEffect } from "react";
 import axios from "axios";
-import { useParams, useHistory, useLocation } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { AuthContext } from "../../../context/userContext";
+import { useNavigate } from "react-router-dom";
 
-const MembershipManagement = ({ onClose }) => {
+const MembershipManagement = () => {
   const { id } = useParams();
-  const { token } = useContext(AuthContext);
-  const history = useHistory();
-  const location = useLocation();
-
   const [email, setEmail] = useState("");
   const [members, setMembers] = useState([{ id: 1, name: "John Doe" }]);
   const [emailStatus, setEmailStatus] = useState({ valid: true, exists: true });
-
-  useEffect(() => {
-    const searchParams = new URLSearchParams(location.search);
-    searchParams.set("usermanagement", "open");
-    history.replace({ search: searchParams.toString() });
-
-    return () => {
-      searchParams.delete("usermanagement");
-      history.replace({ search: searchParams.toString() });
-    };
-  }, [history, location.search]);
-
+  const navigate = useNavigate();
+  const udpateParams = (params) => {
+    if (params) {
+      const query = new URLSearchParams();
+      query.append("tab", "usermanagement");
+      navigate({
+        search: query.toString(),
+      });
+    } else {
+      const query = new URLSearchParams();
+      query.delete("tab");
+      navigate({
+        search: query.toString(),
+      });
+    }
+  };
   const validateEmail = async (email) => {
     const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
     if (!emailRegex.test(email)) {
@@ -85,7 +86,10 @@ const MembershipManagement = ({ onClose }) => {
     const emailInput = e.target.value;
     setEmail(emailInput);
     if (emailInput) {
-      await validateEmail(emailInput);
+      const userData = await validateEmail(emailInput);
+      if (userData) {
+        setEmailStatus({ valid: true, exists: true });
+      }
     }
   };
 
@@ -97,6 +101,13 @@ const MembershipManagement = ({ onClose }) => {
       }
     }
   };
+
+  useEffect(() => {
+    udpateParams(true);
+    return () => {
+      udpateParams(false);
+    };
+  }, []);
 
   return (
     <div className="w-full max-w-4xl h-full p-6 bg-white rounded-lg shadow-lg">

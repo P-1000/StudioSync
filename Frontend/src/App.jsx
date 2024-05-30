@@ -16,9 +16,7 @@ import Login from "./pages/Auth/Login";
 const App = () => {
   return (
     <div className="flex w-full">
-      <Router>
         <MainContent />
-      </Router>
     </div>
   );
 };
