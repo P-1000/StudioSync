@@ -9,12 +9,25 @@ import axios from "axios";
 
 const CreatorTrack = () => {
   const { id } = useParams();
-  const { authUser } = useContext(AuthContext);
+  const { authUser, token } = useContext(AuthContext);
   const [track, setTrack] = useState({});
   const [isLoading, setIsLoading] = useState(true);
-  const getTrack = async () => {
-    const res = await axios.get(`http://localhost:5000/api/tracks/get/${id}`);
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
   };
+  const getTrack = async () => {
+    const res = await axios.get(
+      `http://localhost:3000/api/tracks/gettrack/${id}`,
+      config
+    );
+    setTrack((await res).track);
+  };
+  useEffect(() => {
+    getTrack();
+    console.log(track);
+  }, []);
   return (
     <div className=" w-full flex flex-col">
       <div className="border-b-2 p-5">

@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext , useState , useEffect } from "react";
 import { AuthContext } from "../../context/userContext";
 import EditorTrack from "./EditorTrack";
 import CreatorTrack from "./CreatorTrack";
@@ -13,6 +13,8 @@ const TrackCardPage = () => {
   if (!authUser) {
     return <div>Please log in to view this page.</div>;
   }
+
+  
 
   return (
     <div>

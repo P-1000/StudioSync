@@ -19,7 +19,7 @@ const ProjectCards = () => {
   const getAllTracks = async (id) => {
     try {
       const res = await axios.get(
-        `http://localhost:3000/api/tracks/get?id=${id}`,
+        `http://localhost:3000/api/tracks/get`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

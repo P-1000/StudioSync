@@ -1,6 +1,6 @@
 import React from "react";
 import { RandomAvatar } from "react-random-avatars";
-import Trackinfo from "./trackinfo";
+import Trackinfo from "./Trackinfo";
 
 
 const Hero = () => {
