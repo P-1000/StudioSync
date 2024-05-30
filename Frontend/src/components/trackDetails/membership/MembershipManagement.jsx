@@ -1,33 +1,153 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useContext, useEffect } from "react";
+import axios from "axios";
+import { useParams, useHistory, useLocation } from "react-router-dom";
+import { AuthContext } from "../../../context/userContext";
 
-const MembershipManagement = () => {
-  
+const MembershipManagement = ({ onClose }) => {
+  const { id } = useParams();
+  const { token } = useContext(AuthContext);
+  const history = useHistory();
+  const location = useLocation();
+
+  const [email, setEmail] = useState("");
+  const [members, setMembers] = useState([{ id: 1, name: "John Doe" }]);
+  const [emailStatus, setEmailStatus] = useState({ valid: true, exists: true });
+
+  useEffect(() => {
+    const searchParams = new URLSearchParams(location.search);
+    searchParams.set("usermanagement", "open");
+    history.replace({ search: searchParams.toString() });
+
+    return () => {
+      searchParams.delete("usermanagement");
+      history.replace({ search: searchParams.toString() });
+    };
+  }, [history, location.search]);
+
+  const validateEmail = async (email) => {
+    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+    if (!emailRegex.test(email)) {
+      setEmailStatus({ valid: false, exists: true });
+      return null;
+    }
+
+    setEmailStatus({ valid: true, exists: true });
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    try {
+      const { data } = await axios.get(
+        `/api/invitations/findemail?email=${email}`,
+        config
+      );
+      if (data) {
+        setEmailStatus({ valid: true, exists: true });
+        return data;
+      } else {
+        setEmailStatus({ valid: true, exists: false });
+        return null;
+      }
+    } catch (error) {
+      setEmailStatus({ valid: true, exists: false });
+      console.log(error);
+      return null;
+    }
+  };
+
+  const sendInvite = async (email, editor_id) => {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    try {
+      await axios.post(
+        "/api/invitations/createnew",
+        {
+          track_id: id,
+          editor_email: email,
+          editor_id: editor_id,
+        },
+        config
+      );
+      setMembers([...members, { id: editor_id, name: email }]);
+      setEmail("");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleEmailChange = async (e) => {
+    const emailInput = e.target.value;
+    setEmail(emailInput);
+    if (emailInput) {
+      await validateEmail(emailInput);
+    }
+  };
+
+  const handleSendInvite = async () => {
+    if (email) {
+      const userData = await validateEmail(email);
+      if (userData) {
+        await sendInvite(email, userData.id);
+      }
+    }
+  };
+
   return (
     <div className="w-full max-w-4xl h-full p-6 bg-white rounded-lg shadow-lg">
       <div className="mb-6">
         <h1 className="text-2xl font-bold mb-4">Members</h1>
         <div className="space-y-4">
-          <div className="flex justify-between items-center p-4 bg-gray-100 rounded-lg">
-            <h2 className="text-lg font-semibold">John Doe</h2>
-            <button className="text-red-600 font-semibold hover:underline">
-              Remove
-            </button>
-          </div>
+          {members.map((member) => (
+            <div
+              key={member.id}
+              className="flex justify-between items-center p-4 bg-gray-100 rounded-lg"
+            >
+              <h2 className="text-lg font-semibold">{member.name}</h2>
+              <button className="text-red-600 font-semibold hover:underline">
+                Remove
+              </button>
+            </div>
+          ))}
         </div>
       </div>
 
       <div>
         <h1 className="text-2xl font-bold mb-4">Add Members</h1>
-        <div className="flex space-x-4">
+        <div className="flex space-x-4 items-center">
           <input
             type="text"
             placeholder="Email"
-            className="flex-1 p-2 border border-gray-300 rounded-lg"
+            value={email}
+            onChange={handleEmailChange}
+            className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 
+              ${!emailStatus.valid ? "border-red-600" : ""}
+              ${!emailStatus.exists ? "border-yellow-600" : ""}`}
           />
-          <button className="px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-blue-700 transition duration-300">
-            Add
+          <button
+            onClick={handleSendInvite}
+            disabled={!emailStatus.valid || !emailStatus.exists || !email}
+            className={`px-4 py-2 rounded-lg w-48 transition duration-300
+              ${
+                !emailStatus.valid || !emailStatus.exists || !email
+                  ? "bg-gray-400"
+                  : "bg-gray-800 text-white hover:bg-blue-700"
+              }`}
+          >
+            Send Invite
           </button>
         </div>
+        {!emailStatus.valid && (
+          <p className="text-red-600 mt-2">Invalid email format.</p>
+        )}
+        {!emailStatus.exists && (
+          <p className="text-yellow-600 mt-2">Email not found.</p>
+        )}
       </div>
     </div>
   );

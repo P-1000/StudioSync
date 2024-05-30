@@ -31,7 +31,7 @@ const CreatorTrack = () => {
   return (
     <div className=" w-full flex flex-col">
       <div className="border-b-2 p-5">
-        <BreadCrumsb name={track.name} />
+        <BreadCrumsb id={id} name={track.name} />
         <Hero track={track} />
       </div>
       <div className="">

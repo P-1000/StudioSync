@@ -5,6 +5,7 @@ import {
   createInvitation,
   acceptInvitation,
   getInvitation,
+  findEmail,
 } from "../controllers/invitationController.js";
 import { verifyToken } from "../middleware/verify.js";
 
@@ -19,4 +20,6 @@ inviteRouter.post(
 
 inviteRouter.post("/accept", verifyToken, acceptInvitation);
 
-inviteRouter.get("/get", verifyToken, checkRole("editor"), getInvitation);
+inviteRouter.get("/get", verifyToken, getInvitation); 
+
+inviteRouter.get("/findemail", findEmail); //todo:for creators only

@@ -5,9 +5,9 @@ import { motion } from "framer-motion";
 import { useModal } from "../../context/modalContext";
 import MembershipManagement from "./membership/MembershipManagement";
 
-const Modal = () => {
+const Modal = (props) => {
   const { openModal } = useModal();
-  
+  const {id} = props;
 
   const handleDelete = () => {
     console.log("Delete action triggered");

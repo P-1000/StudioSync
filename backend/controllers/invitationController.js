@@ -107,12 +107,26 @@ export const getInvitation = async (req, res) => {
   }
 };
 
-//todo : rolecheck middle ware yet to implement :
-function checkRole(role) {
-  return (req, res, next) => {
-    if (req.user.role !== role) {
-      return res.status(403).json({ message: "Forbidden" });
+export const findEmail = async (req, res) => {
+  const { email } = req.query;
+  if (!email) {
+    return res.status(400).json({ error: "Email is required" });
+  }
+  const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+  if (!emailRegex.test(email)) {
+    return res.status(400).json({ error: "Invalid email" });
+  }
+  try {
+    const emailfindquery = `
+    SELECT * FROM users WHERE email = $1 AND role = 'editor'
+    `;
+    const result = await db.query(emailfindquery, [email]);
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: "Email not found" });
     }
-    next();
-  };
-}
+    const editor = result.rows[0];
+    res.status(200).json(editor);
+  } catch (er) {
+    console.log(er);
+  }
+};
