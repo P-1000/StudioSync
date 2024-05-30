@@ -4,6 +4,7 @@ import { FaCalendarAlt } from "react-icons/fa";
 import { FaFolderMinus } from "react-icons/fa";
 import { MdMonitorHeart } from "react-icons/md";
 import { FaFolderTree } from "react-icons/fa6";
+import { MdCrisisAlert } from "react-icons/md";
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 
@@ -33,6 +34,11 @@ const NavItems = () => {
       name: "Calendar",
       icon: <FaCalendarAlt />,
       link: "/calendar",
+    },
+    {
+      name: "Pings",
+      icon: <MdCrisisAlert />,
+      link: "/pings",
     },
   ];
   const location = useLocation();

@@ -12,6 +12,7 @@ import DemoUpload from "./components/Tracks/DemoUpload";
 import CheckUser from "./components/utils/CheckUser";
 import Register from "./pages/Auth/Register";
 import Login from "./pages/Auth/Login";
+import PingPage from "./pages/Pings/PingPage";
 
 const App = () => {
   return (
@@ -40,6 +41,7 @@ const MainContent = () => {
           <Route path="/upload" element={<DemoUpload />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/pings" element={<PingPage />} />
           <Route path="/oauth2callback" element={<Temp />} />
         </Routes>
       </div>
