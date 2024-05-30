@@ -44,7 +44,7 @@ const TempUpload = () => {
 
   const fetchUploadUrl = async () => {
     try {
-      const response = await axios.get("http://localhost:3000/getuploadurl");
+      const response = await axios.get("http://localhost:3000/api/drafts/getuploadurl");
       const url = response.data.url;
       console.log("Upload URL:", url);
       setUploadUrl(url);

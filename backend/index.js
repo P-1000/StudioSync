@@ -5,7 +5,7 @@ import authRouter from "./routes/authRoute.js";
 import { inviteRouter } from "./routes/invitationRoutes.js";
 import { trackRouter } from "./routes/trackRoutes.js";
 import { connect, sendToQueue } from "./config/rabbitMq.js";
-
+import { draftRouter } from "./routes/draftRoute.js";
 
 const app = express();
 const port = 3000;
@@ -25,6 +25,7 @@ app.get("/", (req, res) => {
 app.use("/api/tracks", trackRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/invitations", inviteRouter);
+app.use("/api/drafts", draftRouter);
 
 (async () => {
   await connect();
