@@ -71,16 +71,12 @@ export const acceptInvitation = async (req, res) => {
     if (invitationQuery.rows.length === 0) {
       // Invitation not found or already accepted/rejected
       await client.release();
-      return res.status(404).json({ error: "Invitation not found or already processed" });
+      return res
+        .status(404)
+        .json({ error: "Invitation not found or already processed" });
     }
 
     const { track_id, editor_email } = invitationQuery.rows[0];
-
-    if (editor_email !== req.user.email) {
-      // Editor email does not match the authenticated user's email
-      await client.release();
-      return res.status(403).json({ error: "Unauthorized access" });
-    }
 
     await client.query("BEGIN");
 
@@ -109,7 +105,6 @@ export const acceptInvitation = async (req, res) => {
     return res.status(500).json({ error: "Internal server error" });
   }
 };
-
 
 export const getInvitation = async (req, res) => {
   const user_id = req.user.email;
