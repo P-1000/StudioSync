@@ -2,7 +2,8 @@ import React, { useState, lazy, Suspense, useContext } from "react";
 
 const Todo = lazy(() => import("./menuitems/Todo"));
 const Activitylog = lazy(() => import("./menuitems/Activitylog"));
-const NewDraft = lazy(() => import("./menuitems/NewDraft"));
+// const NewDraft = lazy(() => import("./menuitems/NewDraft"));
+const NewDraft = lazy(() => import("../Drafts/DraftComponent"));
 const Notes = lazy(() => import("./menuitems/Notes"));
 const CreatorDraft = lazy(() => import("./menuitems/CreatorDraft"));
 import { LuListTodo } from "react-icons/lu";

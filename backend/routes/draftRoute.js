@@ -1,6 +1,12 @@
 import express from "express";
-import { getuploadurl } from "../controllers/draftController.js";
+import {
+  getuploadurl,
+  storeVideoDraft,
+} from "../controllers/draftController.js";
+import { verifyToken } from "../middleware/verify.js";
 
 export const draftRouter = express.Router();
 
-draftRouter.get("/getuploadurl" , getuploadurl);
+draftRouter.get("/getuploadurl", getuploadurl);
+
+draftRouter.post("/storevideodraft", verifyToken,  storeVideoDraft);
