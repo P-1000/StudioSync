@@ -1,19 +1,12 @@
-<<<<<<< HEAD
 import React, { useEffect, useState } from "react";
-=======
-import React from "react";
->>>>>>> main
 import { BiSolidCategory } from "react-icons/bi";
 import { FaCalendarAlt } from "react-icons/fa";
 import { FaFolderMinus } from "react-icons/fa";
 import { MdMonitorHeart } from "react-icons/md";
 import { FaFolderTree } from "react-icons/fa6";
-<<<<<<< HEAD
 import { MdCrisisAlert } from "react-icons/md";
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
-=======
->>>>>>> main
 
 const NavItems = () => {
   const navItems = [
