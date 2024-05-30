@@ -43,7 +43,8 @@ const CreatorTracksPage = () => {
   const getTracks = async () => {
     try {
       const response = await axios.get("/api/tracks/get", config);
-      setTracks(response.data.tracks);
+      setTracks(response.data.track);
+      console.log("Tracks:", response.data.track)
     } catch (error) {
       console.error("Error getting tracks:", error);
     }
@@ -51,7 +52,7 @@ const CreatorTracksPage = () => {
 
   useEffect(() => {
     getTracks();
-  }, [tracks]);
+  }, []);
 
   return (
     <div className="w-full items-center">

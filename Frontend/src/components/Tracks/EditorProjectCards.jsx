@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import { AuthContext } from "../../context/userContext";
 
-const ProjectCards = () => {
+const EditorProjectCards = () => {
   const { authUser, isLoading, token } = useContext(AuthContext);
   const [tracks, setTracks] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -18,7 +18,7 @@ const ProjectCards = () => {
 
   const getAllTracks = async (id) => {
     try {
-      const res = await axios.get(`http://localhost:3000/api/tracks/get`, {
+      const res = await axios.get(`http://localhost:3000/api/tracks/geteditortracks`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -86,4 +86,4 @@ const ProjectCards = () => {
   );
 };
 
-export default ProjectCards;
+export default EditorProjectCards;

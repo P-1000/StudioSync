@@ -88,22 +88,27 @@ export const getAllTracksEditor = async (req, res) => {
 // Get track by ID
 export const getTrackById = async (req, res) => {
   const { id } = req.params;
-  const creator_id = req.user.id;
+  const userId = req.user.id;
+  const userRole = req.user.role;
 
   try {
-    const trackQuery = `
-    SELECT track.*, pm.member_id, u.username as member_username, u.email as member_email
-  FROM tracks track
-  LEFT JOIN project_memberships pm ON track.id = pm.track_id
-  LEFT JOIN users u ON CAST(pm.member_id AS INTEGER) = u.id
-  WHERE track.id = $1 AND track.creator_id = $2
+    let trackQuery = `
+      SELECT track.*, pm.member_id, u.username as member_username, u.email as member_email
+      FROM tracks track
+      LEFT JOIN project_memberships pm ON track.id = pm.track_id
+      LEFT JOIN users u ON CAST(pm.member_id AS INTEGER) = u.id
+      WHERE track.id = $1
     `;
-    const trackResult = await db.query(trackQuery, [id, creator_id]);
+
+    if (userRole === 'creator') {
+      trackQuery += ' AND track.creator_id = $2';
+    }
+
+    const trackResult = await db.query(trackQuery, [id, userId]); 
 
     if (trackResult.rows.length === 0) {
       return res.status(404).json({
-        message:
-          "Track not found or you are not authorized to access this track",
+        message: "Track not found or you are not authorized to access this track",
       });
     }
 
@@ -136,3 +141,4 @@ export const getTrackById = async (req, res) => {
     return res.status(500).json({ message: "Internal Server Error" });
   }
 };
+

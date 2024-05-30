@@ -20,7 +20,7 @@ const CreatorTracksComponent = ({ setShow, tracks }) => {
       <div className="flex flex-col gap-3">
         <h1 className="text-gray-800 text-3xl font-semibold">Your Tracks</h1>
         <div>
-          <ProjectCards />
+          <ProjectCards tracks={tracks} />
         </div>
       </div>
     </div>
