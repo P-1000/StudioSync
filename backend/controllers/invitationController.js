@@ -57,41 +57,59 @@ export const acceptInvitation = async (req, res) => {
   const { invitation_id } = req.body;
   const editor_id = req.user.id;
 
-  const client = await db.connect();
-
   try {
-    await client.query("BEGIN");
+    const client = await db.connect();
 
-    await client.query(
-      `UPDATE invitations SET status = 'accepted', updated_at = CURRENT_TIMESTAMP
-       WHERE id = $1 AND editor_email = (SELECT email FROM users WHERE id = $2)`,
-      [invitation_id, editor_id]
-    );
-    const invitation = await client.query(
-      `SELECT track_id FROM invitations WHERE id = $1`,
+    // Check if the invitation exists and is pending
+    const invitationQuery = await client.query(
+      `SELECT track_id, editor_email 
+       FROM invitations 
+       WHERE id = $1 AND status = 'pending'`,
       [invitation_id]
     );
-    if (invitation.rows.length === 0) {
-      throw new Error("Invitation not found");
+
+    if (invitationQuery.rows.length === 0) {
+      // Invitation not found or already accepted/rejected
+      await client.release();
+      return res.status(404).json({ error: "Invitation not found or already processed" });
     }
 
-    const track_id = invitation.rows[0].track_id;
+    const { track_id, editor_email } = invitationQuery.rows[0];
 
+    if (editor_email !== req.user.email) {
+      // Editor email does not match the authenticated user's email
+      await client.release();
+      return res.status(403).json({ error: "Unauthorized access" });
+    }
+
+    await client.query("BEGIN");
+
+    // Update invitation status to 'accepted'
     await client.query(
-      `INSERT INTO project_memberships (track_id, editor_id)
+      `UPDATE invitations 
+       SET status = 'accepted', updated_at = CURRENT_TIMESTAMP 
+       WHERE id = $1`,
+      [invitation_id]
+    );
+
+    // Add editor to project memberships
+    await client.query(
+      `INSERT INTO project_memberships (track_id, member_id)
        VALUES ($1, $2)`,
       [track_id, editor_id]
     );
+
     await client.query("COMMIT");
 
-    res.status(200).json({ message: "Invitation accepted" });
+    await client.release();
+
+    return res.status(200).json({ message: "Invitation accepted" });
   } catch (error) {
-    await client.query("ROLLBACK");
-    res.status(500).json({ error: "Database error: " + error.message });
-  } finally {
-    client.release();
+    console.error("Error accepting invitation:", error);
+    return res.status(500).json({ error: "Internal server error" });
   }
 };
+
 
 export const getInvitation = async (req, res) => {
   const user_id = req.user.email;

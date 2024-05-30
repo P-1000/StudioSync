@@ -13,6 +13,7 @@ import CheckUser from "./components/utils/CheckUser";
 import Register from "./pages/Auth/Register";
 import Login from "./pages/Auth/Login";
 import PingPage from "./pages/Pings/PingPage";
+import AcceptInvitation from "./pages/acceptInvitation/AcceptInvitation";
 
 const App = () => {
   return (
@@ -43,6 +44,7 @@ const MainContent = () => {
           <Route path="/register" element={<Register />} />
           <Route path="/pings" element={<PingPage />} />
           <Route path="/oauth2callback" element={<Temp />} />
+          <Route path="/invitation/accept/:invitationId" element={<AcceptInvitation />} /> //todo : more authentification
         </Routes>
       </div>
     </>
