@@ -2,8 +2,8 @@ import React from "react";
 import { RandomAvatar } from "react-random-avatars";
 import Trackinfo from "./Trackinfo";
 
-
-const Hero = () => {
+const Hero = (props) => {
+  const { track } = props;
   return (
     <div className="w-full px-4 mt-6">
       <div
@@ -21,7 +21,7 @@ const Hero = () => {
               />
               <div>
                 <h1 className="text-xl text-white font-semibold">
-                  Bankai Dayo
+                {track?.name}
                 </h1>
                 <p className="text-white font-light">Sembonzakura Kageyoshi</p>
               </div>
@@ -29,21 +29,27 @@ const Hero = () => {
             <div className="flex gap-4 justify-around w-full">
               <div>
                 <h1 className="text-zinc-100 font-bold">CREATED</h1>
-                <p className="font-medium text-zinc-200">12th September, 2021</p>
+                <p className="font-medium text-zinc-200">
+                  {track?.created_at}
+                </p>
               </div>
               <div>
                 <h1 className="text-zinc-100 font-bold">UPDATED</h1>
-                <p className=" font-medium text-zinc-200">12th September, 2021</p>
+                <p className=" font-medium text-zinc-200">
+                  {track?.updated_at}
+                </p>
               </div>
               <div>
                 <h1 className="text-zinc-100 font-bold">DEADLINE</h1>
-                <p className="font-medium text-zinc-200">30th September, 2021</p>
+                <p className="font-medium text-zinc-200">
+                  {track?.deadline}
+                </p>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <Trackinfo />
+      <Trackinfo track={track} />
     </div>
   );
 };

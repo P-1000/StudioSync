@@ -4,7 +4,8 @@ import { FaFolderMinus } from "react-icons/fa";
 import { MdModeEdit } from "react-icons/md";
 import { BsThreeDots } from "react-icons/bs";
 
-const BreadCrumsb = () => {
+const BreadCrumsb = (props) => {
+  const { name } = props;
   const { id } = useParams();
   return (
     <div className="capitalize flex justify-between w-full px-4 items-center">
@@ -12,7 +13,7 @@ const BreadCrumsb = () => {
         <div className="flex gap-2 items-center">
           <div className="w-5 h-5 bg-green-700 rounded-sm" />
           <div>
-            <h1 className="text-xl">{id}</h1>
+            <h1 className="text-xl">{name}</h1>
           </div>
         </div>
         <div className="flex items-center">

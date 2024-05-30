@@ -5,7 +5,8 @@ import { MdPerson } from "react-icons/md";
 import { RiFilter2Fill } from "react-icons/ri";
 import { FaStarHalfAlt } from "react-icons/fa";
 
-const Trackinfo = () => {
+const Trackinfo = (props) => {
+  const { track } = props;
   return (
     <>
       <div className="w-full flex items-start gap-6 justify-between px-10 pt-10 py-5">
@@ -15,7 +16,7 @@ const Trackinfo = () => {
               <FaRegClock className="text-2xl" />
               <h1 className="font-semibold">Created At</h1>
             </div>
-            <h1>May 30 2022 14:23PM</h1>
+            <h1>{track?.created_at}</h1>
           </div>
           <div className="w-full flex items-center justify-between">
             <div className="flex items-center gap-2">
@@ -34,26 +35,38 @@ const Trackinfo = () => {
               </span>
             </div>
           </div>
-          <div className="w-full flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <MdPerson className="text-2xl" />
-              <h1 className="font-semibold">
-                Track Members <span className="text-gray-500">(1)</span>
-              </h1>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="bg-zinc-300 border rounded-2xl px-3 py-1">
-                @sungunwoo
-              </span>
-            </div>
+          <div className="flex items-center gap-2">
+            <MdPerson className="text-2xl" />
+            <h1 className="font-semibold">Members</h1>
           </div>
+          {track?.memberships &&
+            track.memberships.length > 0 &&
+            track.memberships.map((member) => (
+              <div className="w-full flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <img
+                    src={member?.user?.avatar}
+                    alt="avatar"
+                    className="w-8 h-8 rounded-full"
+                  />
+                  <img
+                    src={member?.user?.avatar}
+                    alt="avatar"
+                    className="w-8 h-8 rounded-full"
+                  />
+                  <img
+                    src={member?.user?.avatar}
+                    alt="avatar"
+                    className="w-8 h-8 rounded-full"
+                  />
+                </div>
+              </div>
+            ))}
         </div>
         <div className="w-3/5 flex flex-col items-start gap-4">
           <h1 className="text-xl font-semibold">Description</h1>
           <p className="text-gray-500">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. In in urna
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Rerum
-            temporibus, perferendis ex debitis provident obcaecati impedit?
+            {track?.description}
           </p>
         </div>
       </div>

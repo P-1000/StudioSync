@@ -26,7 +26,7 @@ const ProjectCards = () => {
           },
         }
       );
-      setTracks(res.data);
+      setTracks(res.data.track);
       setLoading(false);
     } catch (error) {
       console.error("Error fetching tracks:", error);

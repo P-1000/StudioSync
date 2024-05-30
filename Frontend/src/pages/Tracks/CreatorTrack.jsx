@@ -22,7 +22,7 @@ const CreatorTrack = () => {
       `http://localhost:3000/api/tracks/gettrack/${id}`,
       config
     );
-    setTrack((await res).track);
+    setTrack((await res.data.track));
   };
   useEffect(() => {
     getTrack();
@@ -31,8 +31,8 @@ const CreatorTrack = () => {
   return (
     <div className=" w-full flex flex-col">
       <div className="border-b-2 p-5">
-        <BreadCrumsb />
-        <Hero />
+        <BreadCrumsb name={track.name} />
+        <Hero track={track} />
       </div>
       <div className="">
         {/* <TempUpload/> */}
@@ -41,7 +41,6 @@ const CreatorTrack = () => {
     </div>
   );
 };
-
 export default CreatorTrack;
 
 //todo : add the track info to the creator track page
