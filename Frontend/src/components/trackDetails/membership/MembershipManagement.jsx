@@ -13,7 +13,7 @@ const MembershipManagement = () => {
   const [members, setMembers] = useState();
   const [emailStatus, setEmailStatus] = useState({ valid: true, exists: true });
   const navigate = useNavigate();
-  const { token } = useContext(AuthContext);
+  const { token, authUser } = useContext(AuthContext);
 
   //update the url when the modal is opened or closed
   const udpateParams = (params) => {
@@ -131,23 +131,26 @@ const MembershipManagement = () => {
       <div className="mb-6">
         <h1 className="text-2xl font-bold mb-4">Members</h1>
         <div className="space-y-4">
-          {members && members.map((member) => (
-            <div
-              key={member.member_id}
-              className="flex justify-between items-center p-4 bg-gray-100 rounded-lg"
-            >
-              <div>
-                <h2 className="text-xl font-semibold">
-                  {member.member_username}
-                </h2>
-                <h3 className="text-sm">{member.member_email}</h3>
-              </div>
+          {members &&
+            members.map((member) => (
+              <div
+                key={member.member_id}
+                className="flex justify-between items-center p-4 bg-gray-100 rounded-lg"
+              >
+                <div>
+                  <h2 className="text-xl font-semibold">
+                    {member.member_username}
+                  </h2>
+                  <h3 className="text-sm">{member.member_email}</h3>
+                </div>
 
-              <button className="text-red-600 font-semibold hover:underline">
-                Remove
-              </button>
-            </div>
-          ))}
+                {authUser.role === "creator" ? (
+                  <button className="text-red-600 font-semibold hover:underline">
+                    Remove
+                  </button>
+                ) : null}
+              </div>
+            ))}
         </div>
       </div>
 
