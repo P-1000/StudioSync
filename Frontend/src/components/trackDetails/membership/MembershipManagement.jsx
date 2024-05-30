@@ -1,15 +1,22 @@
 import React, { useState, useContext, useEffect } from "react";
 import axios from "axios";
-import { useParams } from "react-router-dom";
 import { AuthContext } from "../../../context/userContext";
 import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 const MembershipManagement = () => {
-  const { id } = useParams();
+
+  const location = useLocation();
+  const trackid_ = location.pathname.split("/")[2]
+  const id = parseInt(trackid_)
+
   const [email, setEmail] = useState("");
   const [members, setMembers] = useState([{ id: 1, name: "John Doe" }]);
   const [emailStatus, setEmailStatus] = useState({ valid: true, exists: true });
   const navigate = useNavigate();
+  const { token } = useContext(AuthContext);
+
+  //update the url when the modal is opened or closed
   const udpateParams = (params) => {
     if (params) {
       const query = new URLSearchParams();

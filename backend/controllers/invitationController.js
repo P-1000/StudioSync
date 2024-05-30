@@ -25,7 +25,7 @@ export const createInvitation = async (req, res) => {
 
     const isAlreadyMember = await db.query(
       `
-    SELECT * FROM project_memberships WHERE auth0_user_id = $1`,
+    SELECT * FROM project_memberships WHERE member_id = $1`,
       [editor_id]
     );
 
