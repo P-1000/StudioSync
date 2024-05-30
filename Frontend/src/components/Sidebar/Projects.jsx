@@ -25,7 +25,7 @@ const Projects = () => {
               <span className="text-base">Youtube</span>
             </li>
             <li className="flex items-center gap-3  ">
-              <RandomAvatar name="Linkedin" size={30} />
+              <RandomAvatar name="apple" size={30} />
               <span className="text-base">LinkedIn </span>
             </li>
           </ul>
