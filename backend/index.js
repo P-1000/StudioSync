@@ -6,6 +6,8 @@ import { inviteRouter } from "./routes/invitationRoutes.js";
 import { trackRouter } from "./routes/trackRoutes.js";
 import { connect, sendToQueue } from "./config/rabbitMq.js";
 import { draftRouter } from "./routes/draftRoute.js";
+import { connectToMongoDB } from "./config/Mongo.js";
+import { reviewRouter } from "./routes/reviewRoute.js";
 
 const app = express();
 const port = 3000;
@@ -26,6 +28,7 @@ app.use("/api/tracks", trackRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/invitations", inviteRouter);
 app.use("/api/drafts", draftRouter);
+app.use("/api/review" , reviewRouter);
 
 (async () => {
   await connect();
@@ -40,7 +43,6 @@ app.use("/api/drafts", draftRouter);
         console.log("Error connecting to DB....");
         console.log(e);
       });
-    const message = "Hello from backend";
-    // sendToQueue("invitations", JSON.stringify(message));
+    connectToMongoDB();
   });
 })();
