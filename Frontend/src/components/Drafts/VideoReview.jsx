@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 
 const VideoReview = ({ draft }) => {
   const navigate = useNavigate();
+  localStorage.setItem("draft", JSON.stringify(draft));
   return (
     <div className="p-6 bg-gray-100 rounded-lg shadow-lg">
       <div className="bg-white p-6 rounded-lg shadow-lg">
