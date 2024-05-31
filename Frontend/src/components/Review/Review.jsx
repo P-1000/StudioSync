@@ -21,9 +21,14 @@ const Review = ({
 
   return (
     <div className="h-screen flex flex-col bg-gray-900 text-white">
-      <h1 className="text-3xl font-bold mb-6 text-gray-200 px-6 pt-6">
-        Detailed Review
-      </h1>
+      <div className="flex gap-2 justify-between w-full px-10 py-5 items-center">
+        <h1 className="text-3xl font-bold mb-6 text-gray-200 ">
+          Detailed Review
+        </h1>
+        <button className="px-3 py-1 border-2 rounded-lg hover:bg-white hover:text-black">
+          Send Feedback
+        </button>
+      </div>
       <div className="flex-grow flex">
         <div className="w-full md:w-3/4">
           <div className="bg-black relative">
