@@ -2,6 +2,7 @@ import React from "react";
 import { Player, ControlBar } from "video-react";
 import "video-react/dist/video-react.css";
 import Annotation from "./Annotations";
+import TimelineEditor from "./TimelineEditor";
 
 const Review = ({
   draft,
@@ -19,8 +20,8 @@ const Review = ({
   }
 
   return (
-    <div className="h-screen flex flex-col">
-      <h1 className="text-3xl font-bold mb-6 text-gray-800 px-6 pt-6">
+    <div className="h-screen flex flex-col bg-gray-900 text-white">
+      <h1 className="text-3xl font-bold mb-6 text-gray-200 px-6 pt-6">
         Detailed Review
       </h1>
       <div className="flex-grow flex">
@@ -32,6 +33,7 @@ const Review = ({
             >
               <ControlBar autoHide={false} />
             </Player>
+            <TimelineEditor annotations={annotations} playerRef={playerRef} />
             {annotations.map((annotation) => (
               <Annotation
                 key={annotation.id}
@@ -41,10 +43,10 @@ const Review = ({
             ))}
           </div>
         </div>
-        <div className="w-full md:w-1/4 p-6 bg-gray-100 overflow-y-auto">
+        <div className="w-full md:w-1/4 p-6 bg-gray-800 overflow-y-auto">
           <h2 className="text-2xl font-semibold mb-4">Add Annotation</h2>
           <textarea
-            className="mb-4 p-2 w-full h-40 border border-gray-300 rounded-lg resize-none"
+            className="mb-4 p-2 w-full h-40 border border-gray-600 rounded-lg resize-none bg-gray-700 text-gray-200"
             value={annotationText}
             onChange={(e) => setAnnotationText(e.target.value)}
             onFocus={handleEditorFocus}
@@ -63,11 +65,11 @@ const Review = ({
               {annotations.map((annotation) => (
                 <li
                   key={annotation.id}
-                  className="flex justify-between items-center bg-white p-2 rounded-lg"
+                  className="flex justify-between items-center bg-gray-700 p-2 rounded-lg"
                 >
                   <span
                     onClick={() => handleNavigateToAnnotation(annotation.time)}
-                    className="text-blue-600 cursor-pointer"
+                    className="text-blue-400 cursor-pointer"
                   >
                     {annotation.text} - {Math.floor(annotation.time)}s
                   </span>
