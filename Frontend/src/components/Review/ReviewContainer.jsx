@@ -2,9 +2,11 @@ import React, { useState, useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import Review from "./Review";
 import { v4 as uuidv4 } from "uuid";
+import axios from "axios";
 
 const ReviewContainer = () => {
   const location = useLocation();
+  const track_id = location.pathname.split("/")[2];
   const draftFromStorage = localStorage.getItem("draft");
   const [draft, setDraft] = useState(null);
   const [annotations, setAnnotations] = useState([]);
@@ -17,7 +19,7 @@ const ReviewContainer = () => {
     }
   }, [draftFromStorage]);
 
-  const handleAddAnnotation = () => {
+  const handleAddAnnotation = async () => {
     const currentTime = playerRef.current.getState().player.currentTime;
     const newAnnotation = {
       id: uuidv4(),
@@ -25,6 +27,16 @@ const ReviewContainer = () => {
       time: currentTime,
     };
     setAnnotations([...annotations, newAnnotation]);
+    const response = await axios.post(
+      "http://localhost:3000/api/review/postannotation",
+      {
+        draft_id: draft.id,
+        track_id,
+        time_seconds: currentTime,
+        text: annotationText,
+      }
+    );
+
     setAnnotationText("");
   };
 
@@ -52,7 +64,7 @@ const ReviewContainer = () => {
       annotationText={annotationText}
       setAnnotationText={setAnnotationText}
       playerRef={playerRef}
-    handleNavigateToAnnotation={handleNavigateToAnnotation}
+      handleNavigateToAnnotation={handleNavigateToAnnotation}
       handleAddAnnotation={handleAddAnnotation}
       handleEditorFocus={handleEditorFocus}
       handleEditorBlur={handleEditorBlur}
