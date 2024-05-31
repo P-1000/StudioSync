@@ -100,3 +100,22 @@ export const storeMetaDataDraft = async (req, res) => {
     res.status(500).json({ error: "Failed to store metadata draft." });
   }
 };
+
+export const getVideoDrafts = async (req, res) => {
+  const { track_id } = req.params;
+  try {
+    const query = `
+      SELECT video_drafts.*, users.username as editor_username 
+      FROM video_drafts
+      JOIN users ON video_drafts.editor_id = users.id
+      WHERE video_drafts.track_id = $1
+        `;
+
+    const result = await db.query(query, [track_id]);
+
+    res.status(200).json({ videodrafts: result.rows });
+  } catch (error) {
+    console.error("Error fetching drafts:", error);
+    res.status(500).json({ error: "Failed to fetch drafts." });
+  }
+};
