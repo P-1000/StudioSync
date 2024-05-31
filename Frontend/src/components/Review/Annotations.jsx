@@ -1,3 +1,4 @@
+// Annotation.jsx
 import React, { useState } from "react";
 import Tooltip from "./Tooltip";
 
@@ -15,7 +16,7 @@ const Annotation = ({ annotation, playerRef }) => {
   };
 
   const handleClick = () => {
-    const time = annotation.time;
+    const time = annotation.time_seconds;
     playerRef.current.seek(time);
   };
 
@@ -27,7 +28,7 @@ const Annotation = ({ annotation, playerRef }) => {
       style={{
         position: "absolute",
         left: `${
-          (annotation.time / playerRef.current.getState().player.duration) * 100
+          (annotation.time_seconds / playerRef.current.getState().player.duration) * 100
         }%`,
         bottom: "50px", 
       }}

@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Player, ControlBar } from "video-react";
 import "video-react/dist/video-react.css";
 import Annotation from "./Annotations";
+import axios from "axios";
 import TimelineEditor from "./TimelineEditor";
 
 const Review = ({
@@ -41,7 +42,7 @@ const Review = ({
             <TimelineEditor annotations={annotations} playerRef={playerRef} />
             {annotations.map((annotation) => (
               <Annotation
-                key={annotation.id}
+                key={annotation.id || annotation._id}
                 annotation={annotation}
                 playerRef={playerRef}
               />
@@ -64,19 +65,24 @@ const Review = ({
           >
             Add Annotation
           </button>
-          <div className="mt-8">
+          <div className="mt-8 h-56">
             <h2 className="text-2xl font-semibold mb-4">Annotations</h2>
             <ul className="space-y-2">
               {annotations.map((annotation) => (
                 <li
-                  key={annotation.id}
+                  key={annotation.id||annotation._id}
                   className="flex justify-between items-center bg-gray-700 p-2 rounded-lg"
                 >
                   <span
-                    onClick={() => handleNavigateToAnnotation(annotation.time)}
+                    onClick={() =>
+                      handleNavigateToAnnotation(
+                        annotation?.time || annotation?.time_seconds
+                      )
+                    }
                     className="text-blue-400 cursor-pointer"
                   >
-                    {annotation.text} - {Math.floor(annotation.time)}s
+                    {annotation.text} -{" "}
+                    {Math.floor(annotation.time || annotation.time_seconds)}s
                   </span>
                   <button
                     onClick={() => handleDeleteAnnotation(annotation.id)}

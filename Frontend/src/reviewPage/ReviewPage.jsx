@@ -5,7 +5,7 @@ import ReviewContainer from "../components/Review/ReviewContainer";
 
 const ReviewPage = () => {
   return (
-    <div className=" flex flex-col gap-7">
+    <div className=" flex flex-col gap-7 h-[100vh] overflow-y-scroll fixed w-screen">
       <div className="pt-3">
         <BreadCrumsb />
       </div>

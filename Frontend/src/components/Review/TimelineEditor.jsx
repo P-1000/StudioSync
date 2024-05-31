@@ -11,7 +11,7 @@ const TimelineEditor = ({ annotations, playerRef, handleAnnotationClick }) => {
 
       return (
         <div
-          key={annotation.id}
+          key={annotation.id || annotation._id}
           className="absolute top-0 h-4 bg-red-600 rounded-full cursor-pointer"
           style={{ left: leftPosition }}
           onMouseEnter={() => setHoveredAnnotation(annotation)}

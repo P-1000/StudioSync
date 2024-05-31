@@ -1,3 +1,4 @@
+// ReviewContainer.jsx
 import React, { useState, useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import Review from "./Review";
@@ -19,6 +20,23 @@ const ReviewContainer = () => {
     }
   }, [draftFromStorage]);
 
+  useEffect(() => {
+    if (draft) {
+      getAnnotations();
+    }
+  }, [draft]);
+
+  const getAnnotations = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:3000/api/review/getannotations/${draft.id}`
+      );
+      setAnnotations(response.data);
+    } catch (error) {
+      console.error("Error fetching annotations:", error);
+    }
+  };
+
   const handleAddAnnotation = async () => {
     const currentTime = playerRef.current.getState().player.currentTime;
     const newAnnotation = {
@@ -27,17 +45,21 @@ const ReviewContainer = () => {
       time: currentTime,
     };
     setAnnotations([...annotations, newAnnotation]);
-    const response = await axios.post(
-      "http://localhost:3000/api/review/postannotation",
-      {
-        draft_id: draft.id,
-        track_id,
-        time_seconds: currentTime,
-        text: annotationText,
-      }
-    );
-
-    setAnnotationText("");
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/api/review/postannotation",
+        {
+          draft_id: draft.id,
+          track_id,
+          time_seconds: currentTime,
+          text: annotationText,
+        }
+      );
+      console.log("Annotation posted successfully:", response.data);
+      setAnnotationText("");
+    } catch (error) {
+      console.error("Error posting annotation:", error);
+    }
   };
 
   const handleEditorFocus = () => {
@@ -53,7 +75,6 @@ const ReviewContainer = () => {
   };
 
   const handleNavigateToAnnotation = (time) => {
-    console.log("Seeking to time:", time);
     playerRef.current.seek(time);
   };
 
