@@ -1,59 +1,19 @@
-import React, { useEffect, useState, useRef } from "react";
-import { useLocation } from "react-router-dom";
+import React from "react";
 import { Player, ControlBar } from "video-react";
 import "video-react/dist/video-react.css";
 import Annotation from "./Annotations";
-import Editor from "./AnEditor";
-import { v4 as uuidv4 } from "uuid";
 
-const Review = () => {
-  const location = useLocation();
-  const draftFromStorage = localStorage.getItem("draft");
-  const [draft, setDraft] = useState(null);
-  const [annotations, setAnnotations] = useState([]);
-  const [annotationText, setAnnotationText] = useState("");
-  const [isTyping, setIsTyping] = useState(false);
-  const playerRef = useRef(null);
-
-  useEffect(() => {
-    if (draftFromStorage) {
-      setDraft(JSON.parse(draftFromStorage));
-    }
-  }, [draftFromStorage]);
-
-  const handleAddAnnotation = () => {
-    const currentTime = playerRef.current.getState().player.currentTime;
-    const newAnnotation = {
-      id: uuidv4(),
-      text: annotationText,
-      time: currentTime,
-    };
-    setAnnotations([...annotations, newAnnotation]);
-    setAnnotationText("");
-  };
-
-  const handleEditorFocus = () => {
-    setIsTyping(true);
-    if (!playerRef.current.getState().player.paused) {
-      playerRef.current.pause();
-    }
-  };
-
-  const handleEditorBlur = () => {
-    setIsTyping(false);
-    if (!playerRef.current.getState().player.paused) {
-      playerRef.current.play();
-    }
-  };
-
-  const handleDeleteAnnotation = (id) => {
-    setAnnotations(annotations.filter((annotation) => annotation.id !== id));
-  };
-
-  const handleNavigateToAnnotation = (time) => {
-    playerRef.current.seek(time);
-  };
-
+const Review = ({
+  draft,
+  annotations,
+  annotationText,
+  setAnnotationText,
+  playerRef,
+  handleAddAnnotation,
+  handleEditorFocus,
+  handleEditorBlur,
+  handleNavigateToAnnotation,
+}) => {
   if (!draft) {
     return <div>Loading...</div>;
   }
@@ -83,11 +43,13 @@ const Review = () => {
         </div>
         <div className="w-full md:w-1/4 p-6 bg-gray-100 overflow-y-auto">
           <h2 className="text-2xl font-semibold mb-4">Add Annotation</h2>
-          <Editor
+          <textarea
+            className="mb-4 p-2 w-full h-40 border border-gray-300 rounded-lg resize-none"
             value={annotationText}
-            onChange={setAnnotationText}
+            onChange={(e) => setAnnotationText(e.target.value)}
             onFocus={handleEditorFocus}
             onBlur={handleEditorBlur}
+            placeholder="Add your annotation here..."
           />
           <button
             onClick={handleAddAnnotation}

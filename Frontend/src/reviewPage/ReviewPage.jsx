@@ -1,6 +1,7 @@
 import React from "react";
 import Review from "../components/Review/Review";
 import BreadCrumsb from "../components/trackDetails/BreadCrumsb";
+import ReviewContainer from "../components/Review/ReviewContainer";
 
 const ReviewPage = () => {
   return (
@@ -9,7 +10,7 @@ const ReviewPage = () => {
         <BreadCrumsb />
       </div>
       <div>
-        <Review />
+        <ReviewContainer/>
       </div>
     </div>
   );
