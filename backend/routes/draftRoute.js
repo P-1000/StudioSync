@@ -13,4 +13,3 @@ draftRouter.get("/getuploadurl", getuploadurl);
 draftRouter.post("/storevideodraft", verifyToken, storeVideoDraft);
 
 draftRouter.get("/getvideodrafts/:track_id", verifyToken, getVideoDrafts);
-

@@ -1,4 +1,3 @@
-// AnEditor.jsx
 import React from "react";
 
 const AnEditor = ({ value, onChange, onFocus, onBlur }) => {
