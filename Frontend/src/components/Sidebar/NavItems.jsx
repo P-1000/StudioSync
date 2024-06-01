@@ -39,6 +39,8 @@ const NavItems = () => {
       name: "Pings",
       icon: <MdCrisisAlert />,
       link: "/pings",
+      // Add count state for notifications
+      count: 0,
     },
   ];
   const location = useLocation();
@@ -46,6 +48,17 @@ const NavItems = () => {
   useEffect(() => {
     setActive(location.pathname);
   }, [location]);
+
+  // Function to update notification count
+  const updateNotificationCount = () => {
+    // Increase notification count by 1 for "Pings"
+    const updatedNavItems = navItems.map((item) =>
+      item.link === "/pings" ? { ...item, count: item.count + 1 } : item
+    );
+    // Update state with the updated navigation items
+    setNavItems(updatedNavItems);
+  };
+
   return (
     <div>
       <ul className="flex flex-col gap-4 w-full ">
@@ -61,6 +74,12 @@ const NavItems = () => {
               >
                 {item.icon}
                 <span>{item.name}</span>
+                {/* Display notification count if greater than 0 */}
+                {item.link === "/pings" && item.count > 0 && (
+                  <span className="bg-red-500 text-white rounded-full px-2 py-1 text-xs">
+                    {item.count}
+                  </span>
+                )}
               </li>
             </Link>
           </div>

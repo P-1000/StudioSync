@@ -1,9 +1,16 @@
 import React, { useEffect, useContext } from "react";
 import Avatar from "react-avatar";
 import { AuthContext } from "../../context/userContext";
+import { SocketContext } from "../../context/socketContext";
 
 const ProfileButton = () => {
+  const socket = useContext(SocketContext);
   const { authUser, isAuthenticated, isLoading } = useContext(AuthContext);
+  useEffect(() => {
+    if (socket) {
+      socket.emit("user-connected", authUser.id);
+    }
+  }, [socket, authUser]);
   // useEffect(() => {
   //   //todo truncate correctly bro !
   //   if (user) {

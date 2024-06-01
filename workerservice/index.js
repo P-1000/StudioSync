@@ -23,10 +23,13 @@ redisClient.on("error", (err) => {
   console.error("Redis error:", err);
 });
 
+await redisClient.connect();
+
 app.use(express.json());
 app.use(
   cors({
-    origin: "*",
+    origin: ["http://localhost:5173", "*"],
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     credentials: true,
   })
 );
@@ -35,7 +38,7 @@ app.get("/", (req, res) => {
   res.send("Worker service is active !");
 });
 
-io.attach(server); 
+io.attach(server);
 
 (async () => {
   await startWorker().catch(console.error);

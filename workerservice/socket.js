@@ -5,14 +5,14 @@ import Redis from "ioredis";
 const server = http.createServer();
 const io = new Server(server, {
   cors: {
-    origin: ["*"],
+    origin: ["http://localhost:5173", "*"],
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
   },
 });
-const redisClient = new Redis(); //todo : connect to different redis host 
+const redisClient = new Redis(); //todo : connect to different redis host
 
 io.on("connection", (socket) => {
   socket.on("user-connected", async (userId) => {
-    console.log("User connected:", userId);
     try {
       await redisClient.hset("userSocketMap", userId, socket.id);
     } catch (error) {
