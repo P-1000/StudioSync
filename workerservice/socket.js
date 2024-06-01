@@ -15,6 +15,7 @@ io.on("connection", (socket) => {
   socket.on("user-connected", async (userId) => {
     try {
       await redisClient.hset("userSocketMap", userId, socket.id);
+      console.log("User connected:", userId ," " ,  socket.id);
     } catch (error) {
       console.error("Error storing userId to socket.id mapping:", error);
     }

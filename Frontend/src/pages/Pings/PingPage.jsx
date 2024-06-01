@@ -1,10 +1,11 @@
 import React from 'react'
-import Pings from '../../components/Pings/PingComponent'
+import PingComponent from '../../components/Pings/PingComponent'
+
 
 const PingPage = () => {
   return (
     <div>
-        <Pings />
+      <PingComponent/>
     </div>
   )
 }

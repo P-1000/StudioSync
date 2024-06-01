@@ -1,33 +1,27 @@
-import React, { createContext, useState, useContext } from 'react';
+import React, { createContext, useState, useEffect, useContext } from "react";
+import { SocketContext } from "./socketContext";
 
 const NotificationContext = createContext();
 
 const NotificationProvider = ({ children }) => {
-  const [notifications, setNotifications] = useState([]);
+  const [notification, setNotification] = useState(0);
+  const socket = useContext(SocketContext);
 
-  const addNotification = (notification) => {
-    setNotifications((prevNotifications) => [...prevNotifications, notification]);
-  };
-
-  const removeNotification = (id) => {
-    setNotifications((prevNotifications) =>
-      prevNotifications.filter((notification) => notification.id !== id)
-    );
-  };
+  useEffect(() => {
+    if (socket) {
+      socket.on("new-notification", (notification) => {
+        console.log("new message:", notification);
+        setNotification((prev) => prev + 1);
+        console.log("new message:", notification);
+      });
+    }
+  }, [socket]);
 
   return (
-    <NotificationContext.Provider value={{ notifications, addNotification, removeNotification }}>
+    <NotificationContext.Provider value={{ notification }}>
       {children}
     </NotificationContext.Provider>
   );
 };
 
-const useNotification = () => {
-  const context = useContext(NotificationContext);
-  if (!context) {
-    throw new Error('useNotification must be used within a NotificationProvider');
-  }
-  return context;
-};
-
-export { NotificationProvider, useNotification };
+export { NotificationContext, NotificationProvider };

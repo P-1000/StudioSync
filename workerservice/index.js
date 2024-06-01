@@ -40,6 +40,7 @@ app.get("/", (req, res) => {
 
 io.attach(server);
 
+
 (async () => {
   await startWorker().catch(console.error);
   server.listen(port, () => {

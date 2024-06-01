@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { BiSolidCategory } from "react-icons/bi";
 import { FaCalendarAlt } from "react-icons/fa";
 import { FaFolderMinus } from "react-icons/fa";
@@ -7,8 +7,12 @@ import { FaFolderTree } from "react-icons/fa6";
 import { MdCrisisAlert } from "react-icons/md";
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
+import { SocketContext } from "../../context/socketContext";
+import { NotificationContext } from "../../context/notificationContext";
+import { AuthContext } from "../../context/userContext";
 
 const NavItems = () => {
+  const [counter, setCounter] = useState(0);
   const navItems = [
     {
       name: "Dashboard",
@@ -39,25 +43,53 @@ const NavItems = () => {
       name: "Pings",
       icon: <MdCrisisAlert />,
       link: "/pings",
-      // Add count state for notifications
-      count: 0,
+      count: counter,
     },
   ];
+  const { token } = useContext(AuthContext);
+  const socket = useContext(SocketContext);
+  const { notification } = useContext(NotificationContext);
   const location = useLocation();
   const [active, setActive] = useState("/dashboard");
+
+  useEffect(() => {
+    fetchNotificationCount();
+
+    if (socket) {
+      socket.on("new-notification", () => {
+        setCounter((prevCount) => prevCount + 1);
+      });
+    }
+
+    return () => {
+      if (socket) {
+        socket.off("new-notification");
+      }
+    };
+  }, [socket , counter]);
+
+  const fetchNotificationCount = async () => {
+    try {
+      const response = await fetch("/api/notifications/count", {
+        method: "GET",
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setCounter(data.count);
+      } else {
+        console.error("Failed to fetch notification count");
+      }
+    } catch (error) {
+      console.error("Error fetching notification count:", error);
+    }
+  };
+
   useEffect(() => {
     setActive(location.pathname);
   }, [location]);
-
-  // Function to update notification count
-  const updateNotificationCount = () => {
-    // Increase notification count by 1 for "Pings"
-    const updatedNavItems = navItems.map((item) =>
-      item.link === "/pings" ? { ...item, count: item.count + 1 } : item
-    );
-    // Update state with the updated navigation items
-    setNavItems(updatedNavItems);
-  };
 
   return (
     <div>
@@ -74,10 +106,9 @@ const NavItems = () => {
               >
                 {item.icon}
                 <span>{item.name}</span>
-                {/* Display notification count if greater than 0 */}
-                {item.link === "/pings" && item.count > 0 && (
+                {item.link === "/pings" && counter > 0 && (
                   <span className="bg-red-500 text-white rounded-full px-2 py-1 text-xs">
-                    {item.count}
+                    {counter}
                   </span>
                 )}
               </li>

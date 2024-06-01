@@ -9,16 +9,12 @@ const ProfileButton = () => {
   useEffect(() => {
     if (socket) {
       socket.emit("user-connected", authUser.id);
+      console.log("User connected");
     }
   }, [socket, authUser]);
-  // useEffect(() => {
-  //   //todo truncate correctly bro !
-  //   if (user) {
-  //     if (user.name.length > 10) {
-  //       user.name = user.name.slice(0, 10);
-  //     }
-  //   }
-  // }, [user]);
+
+  
+  //todo : truncate username if it is too long
   return (
     <div className="w-full">
       <div className="flex items-center gap-3 border p-2 rounded-lg hover:shadow-lg transition-shadow duration-300">
