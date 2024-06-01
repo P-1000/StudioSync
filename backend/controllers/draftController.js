@@ -119,3 +119,4 @@ export const getVideoDrafts = async (req, res) => {
     res.status(500).json({ error: "Failed to fetch drafts." });
   }
 };
+

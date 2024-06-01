@@ -39,14 +39,23 @@ export const createInvitation = async (req, res) => {
              RETURNING *`,
       [track_id, creator_id, editor_email]
     );
+    const notificationMessage = `You have a new invitation for track ${track.name}.`;
     const message = {
       track_id,
       editor_email,
-      creator_id,
-      editor_id,
       invitation_id: result.rows[0].id,
+      creator_id,
+      status: "pending",
+      type: "invitation",
+      editor_id,
     };
-    sendToQueue("invitations", JSON.stringify(message));
+
+    await db.query(
+      `INSERT INTO notifications (user_id, type, message, is_read)
+        VALUES ($1, $2, $3, $4)`,
+      [editor_id, "invitation", notificationMessage, false]
+    );
+    sendToQueue("notifications", JSON.stringify(message));
     res.status(201).json(result.rows[0]);
   } catch (error) {
     res.status(500).json({ error: "Database error: " + error.message });

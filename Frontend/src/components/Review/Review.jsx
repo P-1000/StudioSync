@@ -16,6 +16,7 @@ const Review = ({
   handleEditorFocus,
   handleEditorBlur,
   handleNavigateToAnnotation,
+  handleSendFeedback,
 }) => {
   if (!draft) {
     return <div>Loading...</div>;
@@ -28,7 +29,9 @@ const Review = ({
         <h1 className="text-3xl font-bold mb-6 text-gray-200 ">
           {authUser.role === "creator" ? "Annotation Mode" : "Video Feedback"}
         </h1>
-        <button className="px-3 py-1 border-2 rounded-lg hover:bg-white hover:text-black">
+        <button 
+          onClick={handleSendFeedback}
+        className="px-3 py-1 border-2 rounded-lg hover:bg-white hover:text-black">
           Send Feedback
         </button>
       </div>

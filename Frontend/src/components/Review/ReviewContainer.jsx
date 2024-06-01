@@ -1,11 +1,13 @@
 // ReviewContainer.jsx
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import { useLocation } from "react-router-dom";
 import Review from "./Review";
 import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
+import { AuthContext } from "../../context/userContext";
 
 const ReviewContainer = () => {
+  const { token } = useContext(AuthContext);
   const location = useLocation();
   const track_id = location.pathname.split("/")[2];
   const draftFromStorage = localStorage.getItem("draft");
@@ -78,6 +80,27 @@ const ReviewContainer = () => {
     playerRef.current.seek(time);
   };
 
+  const handleSendFeedback = async () => {
+    try {
+      console.log(draft.id)
+      const response = await axios.post(
+        "http://localhost:3000/api/review/sendvideoannotation",
+        {
+          draft_id: draft.id,
+          track_id,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log("Feedback sent successfully:", response.data);
+    } catch (error) {
+      console.error("Error sending feedback:", error);
+    }
+  };
+
   return (
     <Review
       draft={draft}
@@ -89,6 +112,7 @@ const ReviewContainer = () => {
       handleAddAnnotation={handleAddAnnotation}
       handleEditorFocus={handleEditorFocus}
       handleEditorBlur={handleEditorBlur}
+      handleSendFeedback={handleSendFeedback}
     />
   );
 };

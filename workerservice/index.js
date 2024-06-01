@@ -1,8 +1,7 @@
 import express from "express";
 import cors from "cors";
-import amqp from "amqplib";
-import { startWorker } from "./rabbitWorker.js";
 import dotenv from "dotenv";
+import { startWorker } from "./rabbitWorker.js";
 
 dotenv.config();
 
@@ -20,6 +19,7 @@ app.use(
 app.get("/", (req, res) => {
   res.send("Worker service is active !");
 });
+
 
 (async () => {
   await startWorker().catch(console.error);
