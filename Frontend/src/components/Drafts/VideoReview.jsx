@@ -34,7 +34,19 @@ const VideoReview = ({ draft }) => {
         </div>
 
         <div className="mb-6">
-          <video className="w-full rounded-lg shadow-lg" controls>
+          <video
+            className="w-full rounded-lg shadow-lg"
+            autoPlay={false}
+            loop={true}
+            onKeyDown={(e) => {
+              if (e.key === "Escape") {
+                e.preventDefault();
+                e.stopPropagation();
+                e.target.pause();
+              }
+            }}
+            controls
+          >
             <source
               src={
                 `https://studisyncawsbucket.s3.amazonaws.com/` + draft.video_url

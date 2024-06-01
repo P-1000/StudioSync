@@ -30,7 +30,7 @@ const TrackMenuItems = () => {
     },
     {
       id: 3,
-      name: role === "creator" ? "Drafts" : "New Draft",
+      name: "Drafts",
       component: role === "creator" ? CreatorDraft : NewDraft,
       icon: <MdOutlineCreateNewFolder />,
     },
