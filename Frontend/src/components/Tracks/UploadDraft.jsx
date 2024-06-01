@@ -13,7 +13,7 @@ const UploadDraft = () => {
   return (
     <div>
       <label className="relative cursor-pointer bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg ">
-        <span>send a new draft</span>
+        <span>send a new bankai</span>
         <input
           type="file"
           className="opacity-0 absolute inset-0 w-full h-full z-10"

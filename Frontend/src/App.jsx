@@ -1,5 +1,10 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Routes, useLocation } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  useLocation,
+} from "react-router-dom";
 import Profile from "./components/temp/Test";
 import Temp from "./Temp";
 import EditorDashboardPage from "./pages/Dashboard/EditorDashboard/EditorDashboardPage";
@@ -14,18 +19,26 @@ import Register from "./pages/Auth/Register";
 import Login from "./pages/Auth/Login";
 import PingPage from "./pages/Pings/PingPage";
 import AcceptInvitation from "./pages/acceptInvitation/AcceptInvitation";
+import ReviewPage from "./reviewPage/ReviewPage";
 
 const App = () => {
   return (
     <div className="flex w-full">
-        <MainContent />
+      <MainContent />
     </div>
   );
 };
 
 const MainContent = () => {
   const location = useLocation();
-  const hideSidebar = ["/login", "/register"].includes(location.pathname);
+
+  // Function to determine if the sidebar should be hidden
+  const shouldHideSidebar = () => {
+    const draftRouteRegex = /^\/draft\/\d+\/review$/;
+    return ["/login", "/register", "/draft/"].includes(location.pathname) || draftRouteRegex.test(location.pathname);
+  };
+
+  const hideSidebar = shouldHideSidebar();
 
   return (
     <>
@@ -34,9 +47,8 @@ const MainContent = () => {
           <Sidebar />
         </div>
       )}
-      <div className={`main-content ${hideSidebar ? 'w-full' : 'w-[82%]'}`}>
+      <div className={`main-content ${hideSidebar ? "w-full" : "w-[82%]"}`}>
         <Routes>
-          {/* <Route path="/" element={<CheckUser />} /> */}
           <Route path="/tracks" element={<TrackPage />} />
           <Route path="/tracks/:id" element={<TrackCardPage />} />
           <Route path="/upload" element={<DemoUpload />} />
@@ -44,11 +56,21 @@ const MainContent = () => {
           <Route path="/register" element={<Register />} />
           <Route path="/pings" element={<PingPage />} />
           <Route path="/oauth2callback" element={<Temp />} />
-          <Route path="/invitation/accept/:invitationId" element={<AcceptInvitation />} /> //todo : more authentification
+          <Route path="/draft/:id/review" element={<ReviewPage />} />
+          <Route
+            path="/invitation/accept/:invitationId"
+            element={<AcceptInvitation />}
+          />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
     </>
   );
+};
+
+// NotFound component for unmatched routes
+const NotFound = () => {
+  return <h1>404 - Page Not Found</h1>;
 };
 
 export default App;
