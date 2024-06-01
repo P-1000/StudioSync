@@ -8,6 +8,7 @@ import { connect, sendToQueue } from "./config/rabbitMq.js";
 import { draftRouter } from "./routes/draftRoute.js";
 import { connectToMongoDB } from "./config/Mongo.js";
 import { reviewRouter } from "./routes/reviewRoute.js";
+import { notificationRouter } from "./routes/notificationRoute.js";
 
 const app = express();
 const port = 3000;
@@ -28,7 +29,8 @@ app.use("/api/tracks", trackRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/invitations", inviteRouter);
 app.use("/api/drafts", draftRouter);
-app.use("/api/review" , reviewRouter);
+app.use("/api/review", reviewRouter);
+app.use("/api/notifications", notificationRouter);
 
 (async () => {
   await connect();

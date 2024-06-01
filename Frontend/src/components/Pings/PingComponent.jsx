@@ -1,76 +1,119 @@
-import React, { useState, useEffect } from 'react';
-import { 
-  FaBell, FaCheckCircle, FaTimesCircle, FaInfoCircle, FaUserPlus, 
-  FaCommentDots, FaExclamationCircle, FaEnvelope, FaAt, FaFileUpload, 
-  FaFlagCheckered, FaQuestionCircle, FaSyncAlt, FaCogs, FaUsers, FaHandshake 
-} from 'react-icons/fa';
-
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+  useContext,
+} from "react";
+import axios from "axios";
+import {
+  FaUserPlus,
+  FaInfoCircle,
+  FaCheckCircle,
+  FaCommentDots,
+  FaBell,
+  FaExclamationCircle,
+  FaEnvelope,
+  FaAt,
+  FaFileUpload,
+  FaFlagCheckered,
+  FaQuestionCircle,
+  FaSyncAlt,
+  FaCogs,
+  FaUsers,
+  FaHandshake,
+} from "react-icons/fa";
+import { AuthContext } from "../../context/userContext";
 
 const Pings = () => {
   const [pings, setPings] = useState([]);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const observer = useRef();
+
+  const { token } = useContext(AuthContext);
+
+  const fetchPings = useCallback(async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get("/api/notifications", {
+        params: { limit: 10, page },
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const newPings = response.data.notifications;
+      setPings((prevPings) => [...prevPings, ...newPings]);
+      setHasMore(newPings.length > 0);
+      setLoading(false);
+    } catch (err) {
+      setError("Error fetching notifications");
+      setLoading(false);
+    }
+  }, [page, token]);
 
   useEffect(() => {
-    // Dummy data for pings
-    const dummyPings = [
-      { id: 1, type: 'invite', message: 'You have been invited to collaborate on "Project Alpha".', date: new Date('2024-05-31T09:00:00'), status: 'new' },
-      { id: 2, type: 'update', message: 'The status of "Project Beta" has been updated to "In Progress".', date: new Date('2024-05-31T11:30:00'), status: 'read' },
-      { id: 3, type: 'task', message: 'A new task "Edit video" has been assigned to you for "Project Gamma".', date: new Date('2024-05-30T14:00:00'), status: 'new' },
-      { id: 4, type: 'comment', message: 'A comment was added to "Project Delta".', date: new Date('2024-05-30T16:45:00'), status: 'new' },
-      { id: 5, type: 'approval', message: 'Your video for "Project Epsilon" has been approved.', date: new Date('2024-05-29T10:20:00'), status: 'read' },
-      { id: 6, type: 'reminder', message: 'Reminder: The deadline for "Project Zeta" is tomorrow.', date: new Date('2024-05-28T09:00:00'), status: 'new' },
-      { id: 7, type: 'deadline', message: 'The deadline for "Project Eta" is today.', date: new Date('2024-05-28T12:00:00'), status: 'new' },
-      { id: 8, type: 'message', message: 'You have a new message from John.', date: new Date('2024-05-27T14:30:00'), status: 'new' },
-      { id: 9, type: 'mention', message: 'You were mentioned in a comment on "Project Theta".', date: new Date('2024-05-26T17:15:00'), status: 'new' },
-      { id: 10, type: 'file-upload', message: 'A new file was uploaded to "Project Iota".', date: new Date('2024-05-26T09:45:00'), status: 'new' },
-      { id: 11, type: 'milestone', message: '"Project Kappa" has reached its first milestone.', date: new Date('2024-05-25T16:00:00'), status: 'new' },
-      { id: 12, type: 'feedback-request', message: 'Feedback is requested for the video on "Project Lambda".', date: new Date('2024-05-25T11:00:00'), status: 'new' },
-      { id: 13, type: 'revision-request', message: 'Revisions requested for the video on "Project Mu".', date: new Date('2024-05-24T15:30:00'), status: 'new' },
-      { id: 14, type: 'system-alert', message: 'System maintenance scheduled for midnight.', date: new Date('2024-05-23T18:00:00'), status: 'new' },
-      { id: 15, type: 'team-join', message: 'Jane Doe has joined the team on "Project Nu".', date: new Date('2024-05-22T10:00:00'), status: 'new' },
-      { id: 16, type: 'collaboration-request', message: 'Collaboration request received for "Project Xi".', date: new Date('2024-05-21T13:45:00'), status: 'new' },
-    ];
+    fetchPings();
+  }, [page, fetchPings]);
 
-    setPings(dummyPings);
-  }, []);
+  const lastPingElementRef = useCallback(
+    (node) => {
+      if (observer.current) observer.current.disconnect();
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && hasMore) {
+          setPage((prevPage) => prevPage + 1);
+        }
+      });
+      if (node) observer.current.observe(node);
+    },
+    [hasMore]
+  );
 
   const formatDate = (date) => {
-    const options = { month: 'long', day: 'numeric' };
+    const options = { month: "long", day: "numeric" };
     return new Date(date).toLocaleDateString(undefined, options);
+  };
+
+  const formatTime = (date) => {
+    const options = { hour: "2-digit", minute: "2-digit" };
+    return new Date(date).toLocaleTimeString(undefined, options);
   };
 
   const getIcon = (type) => {
     switch (type) {
-      case 'invite':
+      case "invitation":
         return <FaUserPlus className="text-blue-500" />;
-      case 'update':
+      case "update":
         return <FaInfoCircle className="text-yellow-500" />;
-      case 'task':
+      case "task":
         return <FaCheckCircle className="text-green-500" />;
-      case 'comment':
+      case "comment":
         return <FaCommentDots className="text-purple-500" />;
-      case 'approval':
+      case "approval":
         return <FaCheckCircle className="text-green-500" />;
-      case 'reminder':
+      case "reminder":
         return <FaBell className="text-red-500" />;
-      case 'deadline':
+      case "deadline":
         return <FaExclamationCircle className="text-red-500" />;
-      case 'message':
+      case "message":
         return <FaEnvelope className="text-blue-500" />;
-      case 'mention':
+      case "mention":
         return <FaAt className="text-yellow-500" />;
-      case 'file-upload':
+      case "file-upload":
         return <FaFileUpload className="text-blue-500" />;
-      case 'milestone':
+      case "milestone":
         return <FaFlagCheckered className="text-green-500" />;
-      case 'feedback-request':
+      case "feedback-request":
         return <FaQuestionCircle className="text-blue-500" />;
-      case 'revision-request':
+      case "revision-request":
         return <FaSyncAlt className="text-yellow-500" />;
-      case 'system-alert':
+      case "system-alert":
         return <FaCogs className="text-gray-500" />;
-      case 'team-join':
+      case "team-join":
         return <FaUsers className="text-green-500" />;
-      case 'collaboration-request':
+      case "collaboration-request":
         return <FaHandshake className="text-blue-500" />;
       default:
         return <FaInfoCircle className="text-gray-500" />;
@@ -79,7 +122,7 @@ const Pings = () => {
 
   // Group notifications by date
   const groupedPings = pings.reduce((acc, ping) => {
-    const dateKey = ping.date.toDateString();
+    const dateKey = new Date(ping.created_at).toDateString();
     if (!acc[dateKey]) {
       acc[dateKey] = [];
     }
@@ -95,15 +138,23 @@ const Pings = () => {
           <div key={date} className="ping-thread">
             <h2 className="text-lg font-semibold mb-2">{formatDate(date)}</h2>
             <ul className="space-y-4">
-              {pings.map((ping) => (
-                <li key={ping.id} className={`ping-item p-4 rounded shadow-md ${ping.status === 'new' ? 'bg-white' : 'bg-gray-200'}`}>
+              {pings.map((ping, index) => (
+                <li
+                  key={ping.id}
+                  className={`ping-item p-4 rounded shadow-md ${
+                    ping.status === "new" ? "bg-white" : "bg-gray-200"
+                  }`}
+                  ref={index === pings.length - 1 ? lastPingElementRef : null}
+                >
                   <div className="flex items-center">
                     <div className="icon mr-4 text-xl">
                       {getIcon(ping.type)}
                     </div>
                     <div>
                       <p className="text-lg">{ping.message}</p>
-                      <span className="text-sm text-gray-500">{new Date(ping.date).toLocaleTimeString()}</span>
+                      <span className="text-sm text-gray-500">
+                        {formatTime(ping.created_at)}
+                      </span>
                     </div>
                   </div>
                 </li>
@@ -111,11 +162,24 @@ const Pings = () => {
             </ul>
           </div>
         ))}
+        {loading && (
+          <div className="loading text-center py-4">
+            <span>Loading more notifications...</span>
+          </div>
+        )}
+        {!hasMore && !loading && (
+          <div className="no-more text-center py-4">
+            <span>No more notifications to load.</span>
+          </div>
+        )}
+        {error && (
+          <div className="error text-center py-4 text-red-500">
+            <span>{error}</span>
+          </div>
+        )}
       </div>
     </div>
   );
 };
 
 export default Pings;
-
-   
