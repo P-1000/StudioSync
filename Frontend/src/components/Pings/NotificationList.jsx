@@ -15,7 +15,7 @@ const NotificationList = ({ groupedPings, lastPingElementRef }) => {
           <ul className="space-y-4">
             {pings.map((ping, index) => (
               <NotificationItem
-                key={ping?.id || Math.random() * 100}
+                key={ping?.id || index}
                 ping={ping}
                 ref={index === pings.length - 1 ? lastPingElementRef : null}
               />

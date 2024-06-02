@@ -12,15 +12,13 @@ const NotificationProvider = ({ children }) => {
     if (socket) {
       socket.on("new-notification", (notification) => {
         setNotifications([...notifications, notification]);
-        toast.success("New notification");
       });
     }
   }, [socket]);
 
   return (
     <NotificationContext.Provider value={{ notifications, setNotifications }}>
-    <Toaster position="top-right" />
-
+      {/* <Toaster position="top-right" /> */}
       {children}
     </NotificationContext.Provider>
   );

@@ -11,9 +11,13 @@ import { SocketContext } from "../../context/socketContext";
 import { NotificationContext } from "../../context/notificationContext";
 import { AuthContext } from "../../context/userContext";
 import axios from "axios";
+import { Toaster, toast } from "sonner";
+import Button from "../utils/Button";
+import { useNavigate } from "react-router-dom";
 
 const NavItems = () => {
   const [counter, setCounter] = useState(0);
+  const navigate = useNavigate();
   const navItems = [
     {
       name: "Dashboard",
@@ -59,8 +63,26 @@ const NavItems = () => {
     }
 
     if (socket) {
-      socket.on("new-notification", () => {
+      socket.on("new-notification", (notification) => {
         setCounter((prevCount) => prevCount + 1);
+        toast(
+          notification.message,
+          {
+            action: (
+              <button
+                className="bg-gray-900 text-white  py-1 w-28 rounded-lg hover:bg-gray-700 transition-colors duration-200 ease-in-out"
+                onClick={() => {
+                  navigate("/pings");
+                }}
+              >
+                View
+              </button>
+            ),
+          },
+          {
+            duration: 50000,
+          }
+        );
       });
     }
 
@@ -93,6 +115,7 @@ const NavItems = () => {
 
   return (
     <div>
+      <Toaster position="top-right" />
       <ul className="flex flex-col gap-4 w-full ">
         {navItems.map((item) => (
           <div key={item.name}>

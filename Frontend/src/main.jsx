@@ -9,15 +9,15 @@ import { SocketProvider } from "./context/socketContext.jsx";
 import { NotificationProvider } from "./context/notificationContext.jsx";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <SocketProvider>
-    <AuthContextProvider>
-      <BrowserRouter>
-        <ModalProvider>
-          <NotificationProvider>
+  <BrowserRouter>
+    <SocketProvider>
+      <AuthContextProvider>
+        <NotificationProvider>
+          <ModalProvider>
             <App />
-          </NotificationProvider>
-        </ModalProvider>
-      </BrowserRouter>
-    </AuthContextProvider>
-  </SocketProvider>
+          </ModalProvider>
+        </NotificationProvider>
+      </AuthContextProvider>
+    </SocketProvider>
+  </BrowserRouter>
 );
