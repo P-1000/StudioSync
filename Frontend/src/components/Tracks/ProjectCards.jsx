@@ -1,27 +1,29 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { RandomAvatar } from "react-random-avatars";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import { useAuth0 } from "@auth0/auth0-react";
+import { AuthContext } from "../../context/userContext";
 
 const ProjectCards = () => {
-  const { user, isLoading } = useAuth0();
+  const { authUser, isLoading, token } = useContext(AuthContext);
   const [tracks, setTracks] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (user) {
-      getAllTracks(user?.sub);
+    if (authUser) {
+      getAllTracks(authUser.id);
     }
-  }, [user]);
+  }, [authUser]);
 
   const getAllTracks = async (id) => {
     try {
-      const res = await axios.get(
-        `http://localhost:3000/api/tracks/get?id=${id}`
-      );
-      setTracks(res.data);
+      const res = await axios.get(`http://localhost:3000/api/tracks/get`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setTracks(res.data.track);
       setLoading(false);
     } catch (error) {
       console.error("Error fetching tracks:", error);
@@ -31,19 +33,21 @@ const ProjectCards = () => {
   const formatDate = (dateString) => {
     const options = {
       // year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
     };
-    return new Intl.DateTimeFormat('en-US', options).format(new Date(dateString));
+    return new Intl.DateTimeFormat("en-US", options).format(
+      new Date(dateString)
+    );
   };
 
   if (isLoading) {
     return <div>Loading...</div>;
   }
 
-  // Render track cards when tracks are available
+
   return (
     <div className="flex flex-wrap gap-5 py-2 mt-2">
       {tracks.map((track) => (

@@ -1,10 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import { FaFolderMinus } from "react-icons/fa";
 import { MdModeEdit } from "react-icons/md";
 import { BsThreeDots } from "react-icons/bs";
+import Modal from "./Modal";
 
-const BreadCrumsb = () => {
+const BreadCrumsb = (props) => {
+  const [showModal, setShowModal] = useState(false);
+
+  const { name } = props;
   const { id } = useParams();
   return (
     <div className="capitalize flex justify-between w-full px-4 items-center">
@@ -12,7 +16,7 @@ const BreadCrumsb = () => {
         <div className="flex gap-2 items-center">
           <div className="w-5 h-5 bg-green-700 rounded-sm" />
           <div>
-            <h1 className="text-xl">{id}</h1>
+            <h1 className="text-xl">{name}</h1>
           </div>
         </div>
         <div className="flex items-center">
@@ -37,7 +41,13 @@ const BreadCrumsb = () => {
       </div>
       <div className="flex gap-2">
         <MdModeEdit className=" text-gray-800 p-2 border rounded-lg text-4xl hover:bg-black transition-all hover:text-white cursor-pointer" />
-        <BsThreeDots className=" text-gray-800 border p-2 rounded-lg text-4xl hover:bg-black transition-all hover:text-white cursor-pointer" />
+        <div>
+          <button onClick={() => setShowModal(!showModal)}>
+            <BsThreeDots className=" text-gray-800 border p-2 rounded-lg text-4xl hover:bg-black transition-all hover:text-white cursor-pointer" />
+          </button>
+          <div className="absolute top-12 right-64 py-8"
+          >{showModal && <Modal />}</div>
+        </div>
       </div>
     </div>
   );

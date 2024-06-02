@@ -1,6 +1,6 @@
 import React from "react";
 import { LuFolderClock } from "react-icons/lu";
-import ProjectCards from "./ProjectCards";
+import EditorProjectCards from "./EditorProjectCards";
 
 const LatestProjects = () => {
   return (
@@ -17,7 +17,7 @@ const LatestProjects = () => {
     */}
       </div>
       <div>
-        <ProjectCards/>
+      <EditorProjectCards/>
       </div>
     </div>
   );

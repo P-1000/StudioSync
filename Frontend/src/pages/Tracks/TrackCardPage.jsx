@@ -1,22 +1,24 @@
-import React from "react";
-import { useParams } from "react-router-dom";
-import BreadCrumsb from "../../components/trackDetails/BreadCrumsb";
-import Hero from "../../components/trackDetails/Hero";
-import TempUpload from "../../components/trackDetails/Temp";
-import TrackMenuItems from "../../components/trackDetails/TrackMenuItems";
+import React, { useContext , useState , useEffect } from "react";
+import { AuthContext } from "../../context/userContext";
+import EditorTrack from "./EditorTrack";
+import CreatorTrack from "./CreatorTrack";
 
 const TrackCardPage = () => {
-  const { id } = useParams();
+  const { authUser, isLoading } = useContext(AuthContext);
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!authUser) {
+    return <div>Please log in to view this page.</div>;
+  }
+
+  
+
   return (
-    <div className=" w-full flex flex-col">
-      <div className="border-b-2 p-5">
-        <BreadCrumsb />
-        <Hero />
-      </div>
-      <div className="">
-        {/* <TempUpload/> */}
-        <TrackMenuItems />
-      </div>
+    <div>
+      {authUser.role === "creator" ? <CreatorTrack /> : <EditorTrack />}
     </div>
   );
 };
