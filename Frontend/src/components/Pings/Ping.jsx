@@ -7,6 +7,8 @@ import React, {
 } from "react";
 import axios from "axios";
 import { AuthContext } from "../../context/userContext";
+import { SocketContext } from "../../context/socketContext";
+import { NotificationContext } from "../../context/notificationContext";
 import NotificationList from "./NotificationList";
 
 const Pings = () => {
@@ -17,17 +19,21 @@ const Pings = () => {
   const [error, setError] = useState(null);
   const observer = useRef();
 
-  const { token } = useContext(AuthContext);
+  const { token, isLoading } = useContext(AuthContext);
+  const socket = useContext(SocketContext);
+  const { notifications, setNotifications } = useContext(NotificationContext);
 
   const fetchPings = useCallback(async () => {
     setLoading(true);
     try {
-      const response = await axios.get("/api/notifications", {
-        params: { limit: 10, page },
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.get(
+        `/api/notifications?page=${page}&limit=10`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       const newPings = response.data.notifications;
       setPings((prevPings) => [...prevPings, ...newPings]);
       setHasMore(newPings.length > 0);
@@ -39,8 +45,16 @@ const Pings = () => {
   }, [page, token]);
 
   useEffect(() => {
-    fetchPings();
-  }, [page, fetchPings]);
+    if (socket) {
+      socket.on("new-notification", (notification) => {
+        setNotifications([...notifications, notification]);
+        setPings([notification, ...pings]);
+      });
+      return () => {
+        socket.off("new-notification");
+      };
+    }
+  }, [socket, notifications, setNotifications, pings]);
 
   const lastPingElementRef = useCallback(
     (node) => {
@@ -55,8 +69,36 @@ const Pings = () => {
     [hasMore]
   );
 
+  const markFirstAsRead = async () => {
+    if (pings.length > 0) {
+      try {
+        await axios.patch(
+          "http://localhost:3000/api/notifications/read",
+          {
+            notificationId: pings[0].id,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+      } catch (error) {
+        console.error("Error marking notification as read:", error);
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (!isLoading) {
+      fetchPings();
+      markFirstAsRead();
+    }
+  }, [page, fetchPings, isLoading]);
   const groupedPings = pings.reduce((acc, ping) => {
-    const dateKey = new Date(ping.created_at).toDateString();
+    const dateKey = new Date(
+      ping.created_at || new Date().getTime()
+    ).toDateString();
     if (!acc[dateKey]) {
       acc[dateKey] = [];
     }

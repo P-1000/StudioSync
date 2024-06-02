@@ -10,6 +10,7 @@ import { useLocation } from "react-router-dom";
 import { SocketContext } from "../../context/socketContext";
 import { NotificationContext } from "../../context/notificationContext";
 import { AuthContext } from "../../context/userContext";
+import axios from "axios";
 
 const NavItems = () => {
   const [counter, setCounter] = useState(0);
@@ -46,14 +47,16 @@ const NavItems = () => {
       count: counter,
     },
   ];
-  const { token } = useContext(AuthContext);
+  const { token, isLoading } = useContext(AuthContext);
   const socket = useContext(SocketContext);
   const { notification } = useContext(NotificationContext);
   const location = useLocation();
   const [active, setActive] = useState("/dashboard");
 
   useEffect(() => {
-    fetchNotificationCount();
+    if (!isLoading) {
+      const not = fetchNotificationCount();
+    }
 
     if (socket) {
       socket.on("new-notification", () => {
@@ -66,22 +69,19 @@ const NavItems = () => {
         socket.off("new-notification");
       }
     };
-  }, [socket , counter]);
+  }, [socket, counter, isLoading]);
+
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
 
   const fetchNotificationCount = async () => {
     try {
-      const response = await fetch("/api/notifications/count", {
-        method: "GET",
-        headers: {
-          authorization: `Bearer ${token}`,
-        },
-      });
-      if (response.ok) {
-        const data = await response.json();
-        setCounter(data.count);
-      } else {
-        console.error("Failed to fetch notification count");
-      }
+      const response = await axios.get("/api/notifications/count", config);
+      const count = await response.data.count;
+      setCounter(count);
     } catch (error) {
       console.error("Error fetching notification count:", error);
     }

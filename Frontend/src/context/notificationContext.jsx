@@ -1,24 +1,26 @@
 import React, { createContext, useState, useEffect, useContext } from "react";
 import { SocketContext } from "./socketContext";
+import { Toaster, toast } from "sonner";
 
 const NotificationContext = createContext();
 
 const NotificationProvider = ({ children }) => {
-  const [notification, setNotification] = useState(0);
+  const [notifications, setNotifications] = useState([]);
   const socket = useContext(SocketContext);
 
   useEffect(() => {
     if (socket) {
       socket.on("new-notification", (notification) => {
-        console.log("new message:", notification);
-        setNotification((prev) => prev + 1);
-        console.log("new message:", notification);
+        setNotifications([...notifications, notification]);
+        toast.success("New notification");
       });
     }
   }, [socket]);
 
   return (
-    <NotificationContext.Provider value={{ notification }}>
+    <NotificationContext.Provider value={{ notifications, setNotifications }}>
+    <Toaster position="top-right" />
+
       {children}
     </NotificationContext.Provider>
   );

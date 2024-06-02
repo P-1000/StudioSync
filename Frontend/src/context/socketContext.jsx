@@ -7,7 +7,6 @@ const SocketProvider = ({ children }) => {
   const [socket, setSocket] = useState(null);
 
   useEffect(() => {
-    console.log("Connecting to socket")
     const newSocket = io("http://localhost:3001");
     setSocket(newSocket);
     return () => {
@@ -16,8 +15,13 @@ const SocketProvider = ({ children }) => {
   }, []);
 
   return (
-    <SocketContext.Provider value={socket}>{children}</SocketContext.Provider>
+    <SocketContext.Provider value={socket}>
+      {children}
+    </SocketContext.Provider>
   );
 };
 
 export { SocketContext, SocketProvider };
+
+
+//todo : add toast for the connection and error

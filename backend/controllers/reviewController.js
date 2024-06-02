@@ -70,27 +70,34 @@ export const sendVideoAnnotationToEditor = async (req, res) => {
     const editorEmail = await db.query(getEditorEmailQuery, [
       draft.rows[0].editor_id,
     ]);
+    const notificationMessage = `Your video draft for track ${track.rows[0].name} requires revision.`;
+
+    const query = `
+    UPDATE video_drafts
+    SET status = 'revision-requested'
+    WHERE id = $1
+    RETURNING *
+    `;
+    const result = await db.query(query, [draft_id]);
+    const insertNot = await db.query(
+      `INSERT INTO notifications (user_id, type, message, is_read)
+      VALUES ($1, $2, $3, $4)
+      RETURNING *
+      `,
+      [draft.rows[0].editor_id, "revision_request", notificationMessage, false]
+    );
     const message = {
+      track_id,
+      id: insertNot.rows[0].id,
       track_name: track.rows[0].name,
       editor_email: editorEmail.rows[0].email,
       editor_id: draft.rows[0].editor_id,
       draft_id,
       type: "revision_request",
+      created_at : insertNot.rows[0].created_at,
+       notificationMessage,
     };
     sendToQueue("notifications", JSON.stringify(message));
-    const query = `
-      UPDATE video_drafts
-      SET status = 'revision-requested'
-      WHERE id = $1
-      RETURNING *
-    `;
-    const result = await db.query(query, [draft_id]);
-    const notificationMessage = `Your video draft for track ${track.rows[0].name} requires revision.`;
-    await db.query(
-      `INSERT INTO notifications (user_id, type, message, is_read)
-        VALUES ($1, $2, $3, $4)`,
-      [draft.rows[0].editor_id, "revision_request", notificationMessage, false]
-    );
     res.status(200).json({ message: "Annotation sent to editor." });
   } catch (error) {
     console.log("Error sending video annotation to editor:", error);
