@@ -120,3 +120,15 @@ export const getVideoDrafts = async (req, res) => {
   }
 };
 
+app.get("/oauth2callback", async (req, res) => {
+  const { code } = req.query;
+  const { tokens } = await oauth2Client.getToken(code);
+  oauth2Client.setCredentials(tokens);
+  res.redirect(
+    `http://localhost:3000/oauth2callback?access_token=${tokens.access_token}&refresh_token=${tokens.refresh_token}`
+  );
+});
+
+export const uploadVideoToYoutube = async (req, res) => {
+  const { s3Key, accessToken, refreshToken } = req.body;
+};
