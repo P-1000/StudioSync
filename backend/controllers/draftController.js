@@ -1,5 +1,10 @@
 import aws from "aws-sdk";
 import db from "../config/Db.js";
+import fs from 'fs';
+import path from 'path';
+import readJson from 'r-json';
+import { fileURLToPath } from 'url';
+import { google } from 'googleapis';
 
 const region = process.env.region;
 const bucketName = process.env.bucketName;
@@ -12,6 +17,13 @@ const s3 = new aws.S3({
   secretAccessKey: secret,
   signatureVersion: "v4",
 });
+
+const __dirname = path.dirname(new URL(import.meta.url).pathname);
+
+const filePath = path.join(__dirname, 'client.json');
+const CREDENTIALS = readJson(filePath);
+
+
 
 export const getuploadurl = async (req, res) => {
   try {
@@ -120,15 +132,63 @@ export const getVideoDrafts = async (req, res) => {
   }
 };
 
-app.get("/oauth2callback", async (req, res) => {
-  const { code } = req.query;
-  const { tokens } = await oauth2Client.getToken(code);
-  oauth2Client.setCredentials(tokens);
-  res.redirect(
-    `http://localhost:3000/oauth2callback?access_token=${tokens.access_token}&refresh_token=${tokens.refresh_token}`
-  );
-});
+// app.get("/oauth2callback", async (req, res) => {
+//   const { code } = req.query;
+//   const { tokens } = await oauth2Client.getToken(code);
+//   oauth2Client.setCredentials(tokens);
+//   res.redirect(
+//     `http://localhost:3000/oauth2callback?access_token=${tokens.access_token}&refresh_token=${tokens.refresh_token}`
+//   );
+// });
+
+
+
+const Youtube = google.youtube('v3');
 
 export const uploadVideoToYoutube = async (req, res) => {
-  const { s3Key, accessToken, refreshToken } = req.body;
+  const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+  const filePath = path.join(__dirname, 'client.json');
+  const CREDENTIALS = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+
+  const oauth2Client = new google.auth.OAuth2(
+    CREDENTIALS.web.client_id,
+    CREDENTIALS.web.client_secret,
+    CREDENTIALS.web.redirect_uris[0]
+  );
+
+  const { accessToken } = req.body;
+  oauth2Client.setCredentials({ access_token: accessToken });
+
+  try {
+    const filePath = path.join(__dirname, '../dv.mp4');
+    const fileStream = fs.createReadStream(filePath);
+
+    const response = await Youtube.videos.insert({
+      auth: oauth2Client,
+      part: 'snippet,status',
+      resource: {
+        snippet: {
+          title: 'Upload Test From S3',
+          description: 'Test Description Bankai Dayo',
+          tags: ['tag1', 'tag2'],
+        },
+        status: {
+          privacyStatus: 'public',
+        },
+      },
+      media: {
+        body: fileStream,
+      },
+    });
+
+    const videoId = response.data.id;
+    const youtubeUrl = `https://www.youtube.com/watch?v=${videoId}`;
+    console.log('Video is uploaded successfully to YouTube!');
+    console.log(youtubeUrl);
+    res.status(200).json({ youtube_url: youtubeUrl });
+  } catch (error) {
+    console.log('Error uploading video to YouTube:', error);
+    res.status(500).json({ error: 'Failed to upload video to YouTube.' });
+  }
 };
