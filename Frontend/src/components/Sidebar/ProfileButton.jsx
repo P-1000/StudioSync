@@ -1,17 +1,20 @@
 import React, { useEffect, useContext } from "react";
 import Avatar from "react-avatar";
 import { AuthContext } from "../../context/userContext";
+import { SocketContext } from "../../context/socketContext";
 
 const ProfileButton = () => {
+  const socket = useContext(SocketContext);
   const { authUser, isAuthenticated, isLoading } = useContext(AuthContext);
-  // useEffect(() => {
-  //   //todo truncate correctly bro !
-  //   if (user) {
-  //     if (user.name.length > 10) {
-  //       user.name = user.name.slice(0, 10);
-  //     }
-  //   }
-  // }, [user]);
+  useEffect(() => {
+    if (socket) {
+      socket.emit("user-connected", authUser.id);
+      console.log("User connected");
+    }
+  }, [socket, authUser]);
+
+  
+  //todo : truncate username if it is too long
   return (
     <div className="w-full">
       <div className="flex items-center gap-3 border p-2 rounded-lg hover:shadow-lg transition-shadow duration-300">

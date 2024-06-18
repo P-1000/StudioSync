@@ -4,6 +4,7 @@ import { FaFolderMinus } from "react-icons/fa";
 import { MdModeEdit } from "react-icons/md";
 import { BsThreeDots } from "react-icons/bs";
 import Modal from "./Modal";
+import { Link } from "react-router-dom";
 
 const BreadCrumsb = (props) => {
   const [showModal, setShowModal] = useState(false);
@@ -27,7 +28,9 @@ const BreadCrumsb = (props) => {
             <div>
               <FaFolderMinus />
             </div>
-            <h1>Tracks</h1>
+            <Link to="/tracks">
+              <h1>Tracks</h1>
+            </Link>
             <div>
               <img
                 src="/taskflows.png"
@@ -35,7 +38,9 @@ const BreadCrumsb = (props) => {
                 className="w-5 h-[6px]"
               />
             </div>
-            <h1>{id}</h1>
+            <Link to={`/tracks/${id}`}>
+              <h1>{id}</h1>
+            </Link>
           </div>
         </div>
       </div>
@@ -45,8 +50,9 @@ const BreadCrumsb = (props) => {
           <button onClick={() => setShowModal(!showModal)}>
             <BsThreeDots className=" text-gray-800 border p-2 rounded-lg text-4xl hover:bg-black transition-all hover:text-white cursor-pointer" />
           </button>
-          <div className="absolute top-12 right-64 py-8"
-          >{showModal && <Modal />}</div>
+          <div className="absolute top-12 right-64 py-8">
+            {showModal && <Modal />}
+          </div>
         </div>
       </div>
     </div>

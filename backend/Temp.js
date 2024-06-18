@@ -13,7 +13,6 @@ import dotenv from "dotenv";
 import aws from "aws-sdk";
 import { Sign, sign } from "crypto";
 
-
 dotenv.config();
 
 const app = express();

@@ -1,27 +1,16 @@
 import amqp from "amqplib";
-import { sendMail } from "./emailWorker.js";
+import { processNotification } from "./notificationProcessor.js";
 
-async function processInvitation(channel, msg) {
-  try {
-    const invitation = JSON.parse(msg.content.toString());
-    console.log("Processing invitation:", invitation);
-    await sendMail(invitation);
-    await channel.ack(msg);
-  } catch (error) {
-    console.error("Error processing invitation:", error);
-    await channel.nack(msg, false, true);
-  }
-}
 async function startWorker() {
   console.log("Starting worker...");
   try {
     const connection = await amqp.connect("amqp://localhost");
     const channel = await connection.createChannel();
-    await channel.assertQueue("invitations");
+    await channel.assertQueue("notifications");
     await channel.consume(
-      "invitations",
+      "notifications",
       (msg) => {
-        processInvitation(channel, msg);
+        processNotification(channel, msg);
       },
       {
         autoAck: false,
