@@ -5,6 +5,7 @@ import Annotation from "./Annotations";
 import axios from "axios";
 import TimelineEditor from "./TimelineEditor";
 import { AuthContext } from "../../context/userContext";
+import Action from "./Action";
 
 const Review = ({
   draft,
@@ -29,11 +30,11 @@ const Review = ({
         <h1 className="text-3xl font-bold mb-6 text-gray-200 ">
           {authUser.role === "creator" ? "Annotation Mode" : "Video Feedback"}
         </h1>
-        <button 
-          onClick={handleSendFeedback}
-        className="px-3 py-1 border-2 rounded-lg hover:bg-white hover:text-black">
-          Send Feedback
-        </button>
+        <div>
+          <Action
+            handleSendFeedback={handleSendFeedback}
+          />
+        </div> 
       </div>
       <div className="flex-grow flex">
         <div className="w-full md:w-3/4">

@@ -35,35 +35,38 @@ const MainContent = () => {
   // Function to determine if the sidebar should be hidden
   const shouldHideSidebar = () => {
     const draftRouteRegex = /^\/draft\/\d+\/review$/;
-    return ["/login", "/register", "/draft/"].includes(location.pathname) || draftRouteRegex.test(location.pathname);
+    return (
+      ["/login", "/register", "/draft/"].includes(location.pathname) ||
+      draftRouteRegex.test(location.pathname)
+    );
   };
 
   const hideSidebar = shouldHideSidebar();
 
   return (
     <>
-      {!hideSidebar && (
-        <div className="w-[18%]">
-          <Sidebar />
+        {!hideSidebar && (
+          <div className="w-[18%]">
+            <Sidebar />
+          </div>
+        )}
+        <div className={`main-content ${hideSidebar ? "w-full max-w-[1450px]" : "w-[82%] max-w-[1450px]"}`}>
+          <Routes>
+            <Route path="/tracks" element={<TrackPage />} />
+            <Route path="/tracks/:id" element={<TrackCardPage />} />
+            <Route path="/upload" element={<DemoUpload />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/pings" element={<PingPage />} />
+            <Route path="/oauth2callback" element={<Temp />} />
+            <Route path="/draft/:id/review" element={<ReviewPage />} />
+            <Route
+              path="/invitation/accept/:invitationId"
+              element={<AcceptInvitation />}
+            />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
         </div>
-      )}
-      <div className={`main-content ${hideSidebar ? "w-full" : "w-[82%]"}`}>
-        <Routes>
-          <Route path="/tracks" element={<TrackPage />} />
-          <Route path="/tracks/:id" element={<TrackCardPage />} />
-          <Route path="/upload" element={<DemoUpload />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/pings" element={<PingPage />} />
-          <Route path="/oauth2callback" element={<Temp />} />
-          <Route path="/draft/:id/review" element={<ReviewPage />} />
-          <Route
-            path="/invitation/accept/:invitationId"
-            element={<AcceptInvitation />}
-          />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </div>
     </>
   );
 };
