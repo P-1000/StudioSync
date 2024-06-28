@@ -18,6 +18,7 @@ const Review = ({
   handleEditorBlur,
   handleNavigateToAnnotation,
   handleSendFeedback,
+  handleApproveDraft
 }) => {
   if (!draft) {
     return <div>Loading...</div>;
@@ -32,9 +33,9 @@ const Review = ({
         </h1>
         <div>
           <Action
-            handleSendFeedback={handleSendFeedback}
-          />
-        </div> 
+          handleApproveDraft={handleApproveDraft}
+          handleSendFeedback={handleSendFeedback} />
+        </div>
       </div>
       <div className="flex-grow flex">
         <div className="w-full md:w-3/4">

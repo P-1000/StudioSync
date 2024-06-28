@@ -108,7 +108,7 @@ export const getVideoDrafts = async (req, res) => {
   const { track_id } = req.params;
   try {
     const query = `
-      SELECT video_drafts.*, users.username as editor_username 
+      SELECT video_drafts.*, users.username as editor_username
       FROM video_drafts
       JOIN users ON video_drafts.editor_id = users.id
       WHERE video_drafts.track_id = $1
@@ -137,7 +137,6 @@ const client = new S3Client({
   secretAccessKey: secret,
   signatureVersion: "v4",
 });
-//todo : make this modular and more secure
 const Youtube = google.youtube("v3");
 
 export const uploadVideoToYoutube = async (req, res) => {
@@ -153,12 +152,13 @@ export const uploadVideoToYoutube = async (req, res) => {
   );
 
   const { accessToken } = req.body;
+  const {key} = req.body;
   oauth2Client.setCredentials({ access_token: accessToken });
 
   try {
     const s3data = {
       Bucket: process.env.bucketName,
-      Key: "6drobo.mp4",
+      Key: key,
     };
 
     const command = new GetObjectCommand(s3data);

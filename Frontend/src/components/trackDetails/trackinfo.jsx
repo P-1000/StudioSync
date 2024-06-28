@@ -12,14 +12,14 @@ const Trackinfo = (props) => {
       <div className="w-full flex items-start gap-6 justify-between px-10 pt-10 py-5">
         <div className="w-2/5 flex flex-col item-center gap-4">
           <div className="w-full flex items-center justify-between">
-            <div className="flex items-center gap-2">
+            <div className="flex w-1/2 items-center gap-2">
               <FaRegClock className="text-2xl" />
               <h1 className="font-semibold">Created At</h1>
             </div>
             <h1>{track?.created_at}</h1>
           </div>
           <div className="w-full flex items-center justify-between">
-            <div className="flex items-center gap-2">
+            <div className="flex w-1/2 items-center gap-2">
               <FaTags className="text-2xl" />
               <h1 className="font-semibold">Tags</h1>
             </div>
@@ -36,7 +36,7 @@ const Trackinfo = (props) => {
             </div>
           </div>
           <div className="flex justify-between w-full gap-10">
-            <div className="flex items-center gap-2">
+            <div className="flex w-1/2 items-center gap-2">
               <MdPerson className="text-2xl" />
               <h1 className="font-semibold">Members</h1>
             </div>

@@ -15,5 +15,5 @@ draftRouter.post("/storevideodraft", verifyToken, storeVideoDraft);
 
 draftRouter.get("/getvideodrafts/:track_id", verifyToken, getVideoDrafts);
 
-draftRouter.post("/toyt", uploadVideoToYoutube);
+draftRouter.post("/approvedraft", uploadVideoToYoutube);
 // draftRouter.post("/storevideodraft", verifyToken, storeVideoDraft);

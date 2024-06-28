@@ -82,7 +82,7 @@ const ReviewContainer = () => {
 
   const handleSendFeedback = async () => {
     try {
-      console.log(draft.id)
+      console.log(draft.id);
       const response = await axios.post(
         "http://localhost:3000/api/review/sendvideoannotation",
         {
@@ -101,6 +101,26 @@ const ReviewContainer = () => {
     }
   };
 
+  const handleApproveDraft = async (token) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/api/drafts/approvedraft",
+        {
+          accessToken: token,
+          key: draft.video_url,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log("Draft approved successfully:", response.data);
+    } catch (error) {
+      console.error("Error approving draft:", error);
+    }
+  };
+
   return (
     <Review
       draft={draft}
@@ -108,6 +128,7 @@ const ReviewContainer = () => {
       annotationText={annotationText}
       setAnnotationText={setAnnotationText}
       playerRef={playerRef}
+      handleApproveDraft={handleApproveDraft}
       handleNavigateToAnnotation={handleNavigateToAnnotation}
       handleAddAnnotation={handleAddAnnotation}
       handleEditorFocus={handleEditorFocus}

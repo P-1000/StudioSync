@@ -4,8 +4,8 @@ import PingIcon from "./PingIcon";
 const NotificationItem = React.forwardRef(({ ping }, ref) => (
   <li
     ref={ref}
-    className={`ping-item p-4 rounded shadow-md ${
-      ping.status === "new" ? "bg-white" : "bg-gray-200"
+    className={`ping-item p-4 rounded-lg border border-zinc-800/60 ${
+      ping.status === "new" ? "bg-white" : "bg-zinc-200"
     }`}
   >
     <div className="flex items-center">
